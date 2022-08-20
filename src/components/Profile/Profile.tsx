@@ -4,9 +4,9 @@ import {MyPosts} from "./MyPosts/MyPosts";
 
 export const Profile = () => {
     return(
-        <div className={s.content}>
+        <>
             <div>
-                <img src="https://interier-foto.ru/wp-content/uploads/dlinnye-foto-4.jpg" />
+                <img src="https://interier-foto.ru/wp-content/uploads/dlinnye-foto-4.jpg" width={'950px'}/>
             </div>
             <div>
                 ava + description
@@ -14,7 +14,7 @@ export const Profile = () => {
 
             <MyPosts />
 
-        </div>
+        </>
 
     );
 }
