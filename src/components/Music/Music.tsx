@@ -1,7 +1,8 @@
 import React from 'react'
 import s from './Music.module.css'
+
 export const Music = () => {
-    return(
+    return (
         <div>
             Music
         </div>
