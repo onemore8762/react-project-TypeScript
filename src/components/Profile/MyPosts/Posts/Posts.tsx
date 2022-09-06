@@ -2,8 +2,9 @@ import React from 'react';
 import s from './Posts.module.css';
 
 type PostsPropsType = {
-    message?: string
-    like?: number
+    message: string
+    like: number
+    id: number
 }
 export const Posts: React.FC<PostsPropsType> = (props) => {
     return (

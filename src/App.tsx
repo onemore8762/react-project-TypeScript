@@ -10,7 +10,27 @@ import {Music} from "./components/Music/Music";
 import {Settings} from "./components/Settings/Settings";
 
 
-const App = () => {
+export type PropsType = {
+    message: Array<messageType>
+    dialogs: Array<dialogsType>
+    posts: Array<postsType>
+}
+export type dialogsType = {
+    id: number
+    name: string
+}
+export type messageType = {
+    id: number
+    message: string
+}
+export type postsType ={
+    id: number
+    message: string
+    likesCount: number
+}
+
+const App = (props: PropsType) => {
+    const {message, dialogs, posts} = props
     return (
         <BrowserRouter>
             <div className="app-wrapper">
@@ -18,11 +38,11 @@ const App = () => {
                 <Navbar/>
 
                 <div className="app-wrapper-content">
-                    <Route path='/profile' component={Profile}/>
-                    <Route path='/dialogs' component={Dialogs}/>
-                    <Route path='/news' component={News}/>
-                    <Route path='/music' component={Music}/>
-                    <Route path='/settings' component={Settings}/>
+                    <Route path='/profile' render={() => <Profile posts={posts}/>}/>
+                    <Route path='/dialogs' render={() => <Dialogs message={message} dialogs={dialogs}/>}/>
+                    <Route path='/news' render={News}/>
+                    <Route path='/music' render={Music}/>
+                    <Route path='/settings' render={Settings}/>
                 </div>
             </div>
         </BrowserRouter>
