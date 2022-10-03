@@ -4,12 +4,17 @@ import './index.css';
 import App from './App';
 import {store} from "./redux/redux-store";
 import {RootStateType} from "./redux/store";
+import {Provider} from './StoreContext';
+import {BrowserRouter} from "react-router-dom";
 
 
 export const rerenderEntireTrie = (state: RootStateType) => {
 
     ReactDOM.render(
-        <App appState={state} dispatch={store.dispatch.bind(store)} store={store}/>,
+        <BrowserRouter>
+            <Provider store={store}><App/></Provider>
+        </BrowserRouter>
+        ,
         document.getElementById('root')
     );
 }
