@@ -1,8 +1,8 @@
-import React, {ChangeEvent, MouseEvent} from 'react';
+import React, {ChangeEvent} from 'react';
 import s from './MyPosts.module.css';
 import {Posts} from "./Posts/Posts";
-import {AddPostAC, CreateNewTextAC} from "../../../redux/profile-reducer";
-import {ActionTypes, postType} from "../../../redux/store";
+import {postType} from "../../../redux/profile-reducer";
+
 
 type MyPostsType = {
     addPost: () => void

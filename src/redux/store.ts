@@ -1,50 +1,52 @@
+import React from "react";
+
+/*
 import {ProfileActionType, profileReducer} from "./profile-reducer";
 import {
     DialogsActionType,
     dialogsReducer,
 } from "./dialogs-reducer";
 
-export type StoreType = {
+type StoreType = {
     _state: RootStateType
     _callSubscriber: (state: RootStateType) => void
     getState: () => RootStateType
     subscribe: (observer: () => void) => void
     dispatch: (action: ActionTypes) => void
 }
-export type RootStateType = {
+type RootStateType = {
     profilePage: ProfilePage
     dialogsPage: MessagePageType
     sidebarPage: {}
 }
-export type ProfilePage = {
+type ProfilePage = {
     posts: Array<postType>
     newPostText: string
 }
-export type MessagePageType = {
+type MessagePageType = {
     dialogs: Array<dialogType>
     message: Array<messageType>
     newMessageBody: string
 }
-export type dialogType = {
+type dialogType = {
     id: number
     name: string
 }
-export type messageType = {
+type messageType = {
     id: number
     message: string
 }
-export type postType = {
+type postType = {
     id: number
     message: string
     likesCount: number
 }
 
-export type ActionTypes = ProfileActionType | DialogsActionType
 
 
 
-
-export const store: StoreType = {
+type ActionTypes = ProfileActionType | DialogsActionType
+const store: StoreType = {
     _state: {
         profilePage: {
             posts: [
@@ -91,9 +93,9 @@ export const store: StoreType = {
 
         this._state.profilePage = profileReducer(this._state.profilePage, action)
         this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action)
-        /*this._state.sidebar = sidebarReducer(this._state.sidebar, action)
-*/
+        /!*this._state.sidebar = sidebarReducer(this._state.sidebar, action)
+*!/
         this._callSubscriber(this._state)
 
     }
-}
+}*/

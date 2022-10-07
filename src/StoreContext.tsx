@@ -1,3 +1,6 @@
+import React from "react";
+
+/*
 import React from 'react';
 import {StoreType} from "./redux/store";
 import {RootStoreTypeRedux, store} from "./redux/redux-store";
@@ -15,4 +18,5 @@ export const Provider = (props: ProviderType) => {
             {props.children}
         </StoreContext.Provider>
     )
-}
+}*/
+//History

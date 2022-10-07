@@ -1,36 +1,36 @@
 import React from 'react';
-import {AddPostAC, CreateNewTextAC} from "../../../redux/profile-reducer";
+import {AddPostAC, CreateNewTextAC, postType} from "../../../redux/profile-reducer";
 import {MyPosts} from "./MyPosts";
-import {StoreContext} from "../../../StoreContext";
-
-/*type MyPostsType = {
-    store: any
-}*/
-
-export const MyPostsContainer = () => {
+import {Dispatch} from "redux";
+import {AppStateType} from "../../../redux/redux-store";
+import {connect} from "react-redux";
 
 
-    return (
-        <StoreContext.Consumer>
-            {
-                store => {
-                    const state = store.getState()
-
-                    const addPostHandler = () => {
-                        store.dispatch(AddPostAC())
-                    }
-                    const onPostHandler = (value: string) => {
-                        store.dispatch(CreateNewTextAC(value))
-                    }
-
-                    return <MyPosts addPost={addPostHandler}
-                                    onChangeText={onPostHandler}
-                                    newPostText={state.profilePage.newPostText}
-                                    posts={state.profilePage.posts}/>
-                }
-            }
-
-        </StoreContext.Consumer>
-    )
-
+type mapStateToPropsType = {
+    posts: Array<postType>
+    newPostText: string
 }
+
+type mapDispatchToPropsType ={
+    addPost: () => void
+    onChangeText: (value: string) => void
+}
+
+const mapStateToProps = (state: AppStateType) : mapStateToPropsType => {
+    return {
+        posts: state.profilePage.posts,
+        newPostText: state.profilePage.newPostText
+    }
+}
+const mapDispatchToProps = (dispatch: Dispatch)  : mapDispatchToPropsType=> {
+    return {
+        addPost: () => {
+            dispatch(AddPostAC())
+        },
+        onChangeText: (value: string) => {
+            dispatch(CreateNewTextAC(value))
+        }
+    }
+}
+
+export const MyPostsContainer = connect(mapStateToProps, mapDispatchToProps)(MyPosts)

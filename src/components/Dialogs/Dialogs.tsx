@@ -2,14 +2,13 @@ import React, {ChangeEvent} from 'react'
 import s from './Dialogs.module.css'
 import {DialogItems} from "./DialogItems/DialogItems";
 import {Message} from "./Message/Message";
-import {dialogType, messageType} from "../../redux/store";
+import {initialStateMessageType} from "../../redux/dialogs-reducer";
+
 
 type DialogsPropsType = {
     updateNewMessage: (text: string) => void
     sendMessage: () => void
-    dialogs: Array<dialogType>
-    message: Array<messageType>
-    newMessageBody: string
+    dialogsPage: initialStateMessageType
 }
 
 
@@ -17,9 +16,8 @@ export const Dialogs: React.FC<DialogsPropsType> = (
     {
         sendMessage,
         updateNewMessage,
-        dialogs,
-        message,
-        newMessageBody
+        dialogsPage,
+        ...arg
     }
 ) => {
 
@@ -34,17 +32,17 @@ export const Dialogs: React.FC<DialogsPropsType> = (
     return (
         <div className={s.dialogs}>
             <div className={s.dialogsItems}>
-                {dialogs.map(el => {
+                {dialogsPage.dialogs.map(el => {
                     return <DialogItems key={el.id} name={el.name} id={el.id}/>
                 })}
 
 
             </div>
             <div className={s.messages}>
-                {message.map(el => {
+                {dialogsPage.message.map(el => {
                     return <Message key={el.id} message={el.message} id={el.id}/>
                 })}
-                <div><textarea value={newMessageBody} onChange={onChangeHandler}></textarea></div>
+                <div><textarea value={dialogsPage.newMessageBody} onChange={onChangeHandler}></textarea></div>
                 <div>
                     <button onClick={onClickHandler}>Add</button>
                 </div>
