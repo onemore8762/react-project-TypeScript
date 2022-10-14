@@ -1,6 +1,7 @@
 import React from 'react';
+import userPhoto from "../../assets/images/user.png";
+import axios from "axios";
 import {initialStateType, UserType} from "../../redux/users-reducer";
-
 
 type UsersTypeProps = {
     usersPage: initialStateType
@@ -9,58 +10,39 @@ type UsersTypeProps = {
     setUsers: (users: Array<UserType>) => void
 }
 
-const Users = (props: UsersTypeProps) => {
+class Users extends React.Component<UsersTypeProps> {
 
-    if (props.usersPage.users.length === 0) {
-        props.setUsers([
-            {
-                id: 1,
-                avatarUrl: 'https://i.pinimg.com/originals/9c/77/46/9c7746225873e02d83b9315501b8dd2f.jpg',
-                followed: true,
-                fullName: 'Denis',
-                status: 'I am a booss',
-                location: {city: 'Cherepovetz', country: 'Russia'}
-            },
-            {
-                id: 2,
-                avatarUrl: 'https://i.pinimg.com/originals/9c/77/46/9c7746225873e02d83b9315501b8dd2f.jpg',
-                followed: false,
-                fullName: 'Dmitry',
-                status: 'I am a boss to',
-                location: {city: 'Minsk', country: 'Belarus'}
-            },
-            {
-                id: 3,
-                avatarUrl: 'https://i.pinimg.com/originals/9c/77/46/9c7746225873e02d83b9315501b8dd2f.jpg',
-                followed: true,
-                fullName: 'Andrew',
-                status: 'I am a bdasd',
-                location: {city: 'Kiev', country: 'Ukraine'}
-            }
-
-        ])
+    /*constructor(props: UsersTypeProps) {
+        super(props);
+    }*/
+    componentDidMount() {
+        axios.get("https://social-network.samuraijs.com/api/1.0/users").then(responce => {
+            this.props.setUsers(responce.data.items)
+        })
     }
 
-    return (
-        <div>
-            {props.usersPage.users.map(el => {
-                return (
-                    <div>
-                        <img src={el.avatarUrl} style={{width: '100px'}}/>
-                        <div>{el.fullName}</div>
-                        <div>{el.location.city}</div>
-                        <div>{el.location.country}</div>
-                        {el.followed
-                            ? <button onClick={() => props.unFollow(el.id)}>unfollowed</button>
-                            : <button onClick={() => props.follow(el.id)}>followed</button>
+    render(){
+        return (
+            <div>
+                {this.props.usersPage.users.map(el => {
+                    return (
+                        <div>
+                            <img src={el.photos.small != null ? el.photos.small: userPhoto} style={{width: '100px'}}/>
+                            <div>{el.name}</div>
+                            <div>{'el.location.city'}</div>
+                            <div>{'el.location.country'}</div>
+                            {el.followed
+                                ? <button onClick={() => this.props.unFollow(el.id)}>unfollowed</button>
+                                : <button onClick={() => this.props.follow(el.id)}>followed</button>
 
-                        }
-                        <div>-------</div>
-                    </div>
-                )
-            })}
-        </div>
-    );
-};
+                            }
+                            <div>-------</div>
+                        </div>
+                    )
+                })}
+            </div>
+        );
+    }
+}
 
 export default Users;

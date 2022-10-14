@@ -1,6 +1,6 @@
 import React from "react";
 import {AllActionType} from "./redux-store";
-import users from "../components/Users/Users";
+
 
 const FOLLOW = 'FOLLOW'
 const UNFOLLOW = 'UNFOLLOW'
@@ -12,19 +12,16 @@ const initialState: initialStateType = {
 export type initialStateType = {
     users: UserType[]
 }
-
 export type UserType = {
     id: number
-    avatarUrl: string
+    name: string
+    uniqueUrlName: any
+    photos: {
+        small: any
+        large: any
+    }
     followed: boolean
-    fullName: string
     status: string
-    location: UsersLocation
-}
-
-type UsersLocation = {
-    city: string
-    country: string
 }
 
 
