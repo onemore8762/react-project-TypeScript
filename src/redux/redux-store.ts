@@ -9,7 +9,7 @@ export const rootReducer = combineReducers({
     profilePage: profileReducer,
     dialogsPage: dialogsReducer,
     sidebarPage: sidebarReducer,
-    users: usersReducer
+    usersPage: usersReducer
 })
 
 export type AllActionType  = ProfileActionType | DialogsActionType | UsersActionsType
