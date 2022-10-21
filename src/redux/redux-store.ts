@@ -4,6 +4,7 @@ import {DialogsActionType, dialogsReducer} from "./dialogs-reducer";
 import {sidebarReducer} from "./sidebar-reducer";
 import {UsersActionsType, usersReducer} from "./users-reducer";
 
+declare const window: any;
 
 export const rootReducer = combineReducers({
     profilePage: profileReducer,
@@ -18,3 +19,5 @@ export type AppStateType = ReturnType<typeof rootReducer>
 
 
 export let store = createStore(rootReducer);
+
+window.store = store
