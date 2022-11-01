@@ -3,8 +3,7 @@ import s from "./Users.module.css";
 import userPhoto from "../../assets/images/user.png";
 import {UserType} from "../../redux/users-reducer";
 import {NavLink} from "react-router-dom";
-import axios from "axios";
-import {followAPI, unFollowAPI} from "../../api/api";
+
 
 type UsersPropsType = {
     users: UserType[]
@@ -54,24 +53,10 @@ export const Users: React.FC<UsersPropsType> = (props) => {
                         <div>{'el.location.country'}</div>
                         {el.followed
                             ? <button disabled={props.followingInProgress.some(id => id === el.id)} onClick={() => {
-                                props.toggleIsFollowingProgress(true, el.id)
-                                unFollowAPI.unFollow(el.id)
-                                    .then((data) => {
-                                        if (data.resultCode === 0) {
-                                            props.unFollow(el.id)
-                                        }
-                                        props.toggleIsFollowingProgress(false, el.id)
-                                    })
+                                props.unFollow(el.id)
                             }}>unfollowed</button>
                             : <button disabled={props.followingInProgress.some(id => id === el.id)} onClick={() => {
-                                props.toggleIsFollowingProgress(true, el.id)
-                                followAPI.follow(el.id)
-                                    .then((data) => {
-                                        if (data.resultCode === 0) {
-                                            props.follow(el.id)
-                                        }
-                                        props.toggleIsFollowingProgress(false, el.id)
-                                    })
+                                props.follow(el.id)
                             }}>followed</button>
 
                         }

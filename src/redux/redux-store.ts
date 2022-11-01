@@ -1,9 +1,10 @@
-import {combineReducers, legacy_createStore as createStore, Store} from "redux";
+import {combineReducers, legacy_createStore as createStore, applyMiddleware} from "redux";
 import {ProfileActionType, profileReducer} from "./profile-reducer";
 import {DialogsActionType, dialogsReducer} from "./dialogs-reducer";
 import {sidebarReducer} from "./sidebar-reducer";
 import {UsersActionsType, usersReducer} from "./users-reducer";
 import {authActionType, authReducer} from "./auth-reducer";
+import thunk from "redux-thunk";
 
 declare const window: any;
 
@@ -20,6 +21,6 @@ export type AllActionType  = ProfileActionType | DialogsActionType | UsersAction
 export type AppStateType = ReturnType<typeof rootReducer>
 
 
-export let store = createStore(rootReducer);
+export let store = createStore(rootReducer, applyMiddleware(thunk));
 
 window.store = store

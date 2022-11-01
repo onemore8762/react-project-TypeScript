@@ -1,10 +1,11 @@
 import React from 'react';
 import s from './ProfileInfo.module.css'
 import {Preloader} from "../../common/Preloader/Preloader";
+import {profileType} from "../ProfileContainer";
 
 
 type ProfileInfoType ={
-    profile: any
+    profile: profileType | null
 }
 
 export const ProfileInfo = (props: ProfileInfoType) => {

@@ -1,5 +1,7 @@
 import React from 'react';
 import {AllActionType} from "./redux-store";
+import {Dispatch} from "redux";
+import {profileAPI} from "../api/api";
 
 
 
@@ -56,3 +58,13 @@ export type SetUserProfileACType = ReturnType<typeof SetUserProfileAC>
 export const AddPostAC = () => ({type: ADD_POST} as const)
 export const CreateNewTextAC = (newText: string) => ({type: UPDATE_NEW_POST_TEXT, newText: newText} as const)
 export const SetUserProfileAC = (profile: any) => ({type: SET_USER_PROFILE, profile: profile} as const)
+
+
+export const getUserProfile = (userId: string) => {
+    return (dispatch: Dispatch) => {
+        profileAPI.getProfile(userId)
+            .then(data => {
+                dispatch(SetUserProfileAC(data))
+            })
+    }
+}

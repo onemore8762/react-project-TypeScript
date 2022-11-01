@@ -1,22 +1,44 @@
 import React from 'react';
 import {Profile} from "./Profile";
-import axios from "axios";
 import {connect} from "react-redux";
-import {SetUserProfileAC} from "../../redux/profile-reducer";
+import {getUserProfile} from "../../redux/profile-reducer";
 import {AppStateType} from "../../redux/redux-store";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {profileAPI} from "../../api/api";
 
+export type profileType = {
+
+    aboutMe: string | null,
+    contacts: {
+        facebook: string | null,
+        "website": string | null,
+        vk: string | null,
+        twitter: string | null,
+        instagram: string | null,
+        youtube: string | null,
+        github: string | null,
+        mainLink: string | null
+    },
+    lookingForAJob: boolean,
+    lookingForAJobDescription: string | null,
+    fullName: string,
+    userId: string,
+    "photos": {
+        "small": string | null,
+        "large": string
+
+    }
+}
 
 type PathParamsType = {
-    userId: any
+    userId: string | undefined
 }
 
 type mapStateToProps = {
-    profile: any
+    profile: profileType | null
 }
+
 type mapDispatchToProps = {
-    SetUserProfile: (profile: any) => any
+    getUserProfile: (userId: string) => void
 }
 
 type ownPropsType = mapStateToProps & mapDispatchToProps
@@ -25,11 +47,8 @@ type PropsType = RouteComponentProps<PathParamsType> & ownPropsType
 class ProfileContainer extends React.Component<PropsType> {
     componentDidMount() {
         let userId = this.props.match.params.userId
-        if (!userId) userId = 11
-        profileAPI.getProfile(userId)
-            .then(data => {
-                this.props.SetUserProfile(data)
-            })
+        if (!userId) userId = "11"
+        this.props.getUserProfile(userId)
     }
 
     render() {
@@ -50,5 +69,5 @@ let withUrlDataContainerComponent = withRouter(ProfileContainer)
 
 
 export default connect(mapStateToProps, {
-    SetUserProfile: SetUserProfileAC
+    getUserProfile
 })(withUrlDataContainerComponent)
