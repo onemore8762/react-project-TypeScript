@@ -5,13 +5,15 @@ import {profileType} from "./ProfileContainer";
 
 type ProfileType ={
     profile: profileType | null
+    status: string
+    updateStatus: (status: string) => void
 }
 
 export const Profile = (props : ProfileType) => {
 
     return (
         <>
-            <ProfileInfo profile={props.profile}/>
+            <ProfileInfo profile={props.profile} status={props.status} updateStatus={props.updateStatus}/>
             <MyPostsContainer />
         </>
 
