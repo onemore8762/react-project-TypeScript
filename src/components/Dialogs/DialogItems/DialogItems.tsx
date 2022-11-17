@@ -4,7 +4,7 @@ import {NavLink} from "react-router-dom";
 
 type DialogsItemsProps = {
     name: string
-    id: number
+    id: string
 }
 
 export const DialogItems = (props: DialogsItemsProps) => {
