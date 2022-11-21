@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 
 
@@ -40,6 +39,11 @@ export const profileAPI = {
 export const authApi = {
     me() {
         return instance.get('auth/me')
-            .then(response => response.data)
+    },
+    login(email : string, password : string, rememberMe : boolean) {
+        return instance.post('auth/login', {email, password, rememberMe})
+    },
+    logout(){
+        return instance.delete('auth/login')
     }
 }
