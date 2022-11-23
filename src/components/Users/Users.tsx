@@ -30,13 +30,13 @@ export const Users: React.FC<UsersPropsType> = (props) => {
     if (props.currentPage > pagesCount - 2) {
         pages = [1, pagesCount - 3, pagesCount - 2, pagesCount - 1, pagesCount]
     }
-
     return (
         <div>
             <div>
-                {pages.map(p => {
+                {pages.map((p,index) => {
 
                     return <span className={props.currentPage == p ? s.selectedPage + ' ' + s.default : s.default}
+                                 key={index}
                                  onClick={() => {
                                      props.onPageChanged(p)
                                  }}>{p}</span>
@@ -44,9 +44,9 @@ export const Users: React.FC<UsersPropsType> = (props) => {
             </div>
             {props.users.map(el => {
                 return (
-                    <div>
+                    <div key={el.id}>
                         <NavLink to={'/profile/' + el.id}>
-                            <img src={el.photos.small != null ? el.photos.small : userPhoto} style={{width: '100px'}}/>
+                            <img src={el.photos.small != null ? el.photos.small : userPhoto} style={{width: '100px'}} alt={'photo-user'}/>
                         </NavLink>
                         <div>{el.name}</div>
                         <div>{'el.location.city'}</div>

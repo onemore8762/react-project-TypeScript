@@ -2,7 +2,7 @@ import React from 'react';
 import s from './ProfileInfo.module.css'
 import {Preloader} from "../../common/Preloader/Preloader";
 import {profileType} from "../ProfileContainer";
-import {ProfileStatus} from './ProfileStatus'
+import {ProfileStatusWithHooks} from "./ProfileStatusWithHooks";
 
 type ProfileInfoType = {
     profile: profileType | null
@@ -19,10 +19,11 @@ export const ProfileInfo = (props: ProfileInfoType) => {
             <div>
                 <img src="https://interier-foto.ru/wp-content/uploads/dlinnye-foto-4.jpg" width={'950px'} alt='photo'/>
             </div>
+            <h2>{props.profile.fullName}</h2>
             <div className={s.descriptionBlock}>
                 <img src={props.profile?.photos.large} alt='userPhoto'/>
                {/* <div> {props.profile.aboutMe}</div>*/}
-                <ProfileStatus status={props.status} updateStatus={props.updateStatus}/>
+                <ProfileStatusWithHooks status={props.status} updateStatus={props.updateStatus}/>
             </div>
         </div>
     );

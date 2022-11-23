@@ -38,6 +38,7 @@ export const profileReducer = (state: initialStateProfileType = initialState, ac
             return {...state, posts: [...state.posts, newPost]}
         case SET_USER_PROFILE:
             return {...state, profile: action.profile}
+
         case SET_STATUS:
             return {...state, status: action.status}
         default:
