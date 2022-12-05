@@ -18,11 +18,7 @@ type FormDataType = {
 
 const maxLength10 = maxLength(10)
 
-export const MyPosts: React.FC<MyPostsType> =
-    ({
-         addPost,
-         posts
-     }) => {
+export const MyPosts: React.FC<MyPostsType> = React.memo(({addPost, posts}) => {
 
         const onSubmit = (FormData: FormDataType) => {
             addPost(FormData.newPostText)
@@ -41,7 +37,7 @@ export const MyPosts: React.FC<MyPostsType> =
 
         );
     }
-
+)
 
 
 const AddNewPostForm : React.FC<InjectedFormProps<FormDataType>> = (props) => {
