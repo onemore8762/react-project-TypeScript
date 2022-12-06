@@ -1,0 +1,11 @@
+
+.selectedPage{
+    font-weight: bold;
+}
+
+.default:first-child{
+    margin-right: 10px;
+}
+.default:last-child{
+    margin-left: 10px;
+}

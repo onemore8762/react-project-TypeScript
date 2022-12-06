@@ -1,13 +1,13 @@
-
 import {AllActionType} from "./redux-store";
 import {Dispatch} from "redux";
 import {profileAPI} from "../api/api";
 import {v1} from "uuid";
 
 
-export const ADD_POST = 'ADD_POST'
-export const SET_USER_PROFILE = 'SET_USER_PROFILE'
-export const SET_STATUS = 'SET_STATUS'
+export const ADD_POST = 'react-samurai-TS/profile/ADD_POST'
+export const DELETE_POST = 'react-samurai-TS/profile/DELETE_POST'
+export const SET_USER_PROFILE = 'react-samurai-TS/profile/SET_USER_PROFILE'
+export const SET_STATUS = 'react-samurai-TS/profile/SET_STATUS'
 
 export type postType = {
     id: string
@@ -27,7 +27,7 @@ let initialState = {
 
 export type initialStateProfileType = typeof initialState
 
-export const profileReducer = (state: initialStateProfileType = initialState, action: AllActionType) : initialStateProfileType=> {
+export const profileReducer = (state: initialStateProfileType = initialState, action: AllActionType): initialStateProfileType => {
     switch (action.type) {
         case ADD_POST:
             let newPost = {
@@ -36,6 +36,8 @@ export const profileReducer = (state: initialStateProfileType = initialState, ac
                 likesCount: 12
             }
             return {...state, posts: [...state.posts, newPost]}
+        case DELETE_POST:
+            return {...state, posts: state.posts.filter(el => el.id !== action.postId)}
         case SET_USER_PROFILE:
             return {...state, profile: action.profile}
 
@@ -48,41 +50,37 @@ export const profileReducer = (state: initialStateProfileType = initialState, ac
 
 export type ProfileActionType = AddPostActionType
     | SetUserProfileACType
-    | setStatusACType
+    | SetStatusACType
+    | DeletePostACType
 export type AddPostActionType = ReturnType<typeof AddPostAC>
 export type SetUserProfileACType = ReturnType<typeof SetUserProfileAC>
-export type setStatusACType = ReturnType<typeof setStatus>
+export type SetStatusACType = ReturnType<typeof setStatus>
+export type DeletePostACType = ReturnType<typeof deletePostAC>
 
 
 export const AddPostAC = (newPostText: string) => ({type: ADD_POST, newPostText} as const)
 export const SetUserProfileAC = (profile: any) => ({type: SET_USER_PROFILE, profile: profile} as const)
-export const setStatus = (status: string) => ({type: SET_STATUS, status: status} as const )
+export const setStatus = (status: string) => ({type: SET_STATUS, status: status} as const)
+export const deletePostAC = (postId: string) => ({type: DELETE_POST, postId: postId} as const)
 
-export const getUserProfile = (userId: string) => {
-    return (dispatch: Dispatch) => {
-        profileAPI.getProfile(userId)
-            .then(response => {
-                dispatch(SetUserProfileAC(response.data))
-            })
-    }
+export const getUserProfile = (userId: string) => async (dispatch: Dispatch) => {
+    const response = await profileAPI.getProfile(userId)
+
+    dispatch(SetUserProfileAC(response.data))
 }
 
-export const getStatus = (userId: string) => {
-    return (dispatch: Dispatch) => {
-        profileAPI.getStatus(userId)
-            .then(response => {
-                dispatch(setStatus(response.data))
-            })
-    }
+
+export const getStatus = (userId: string) => async (dispatch: Dispatch) => {
+    const response = await profileAPI.getStatus(userId)
+
+    dispatch(setStatus(response.data))
 }
 
-export const updateStatus = (status: string) => {
-    return (dispatch: Dispatch) => {
-        profileAPI.updateStatus(status)
-            .then(response => {
-                if(response.data.resultCode === 0){
-                    dispatch(setStatus(status))
-                }
-            })
+
+export const updateStatus = (status: string) => async (dispatch: Dispatch) => {
+    const response = await profileAPI.updateStatus(status)
+
+    if (response.data.resultCode === 0) {
+        dispatch(setStatus(status))
     }
 }
