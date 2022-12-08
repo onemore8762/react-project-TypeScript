@@ -16,13 +16,23 @@ export const Textarea = ({input, meta, ...props } : any) => {
 
 export const Input = ({input, meta, ...props } : any) => {
     let hasError = meta.touched && meta.error
-
     return <div className={styles.formControl + ' ' + (hasError? styles.error : '')}>
         <div>
             <input  {...input} {...props}/>
         </div>
         <div>
             {hasError && <span>{meta.error}</span>}
+        </div>
+    </div>
+}
+
+export const InputForm = ({input, ...props } : any) => {
+    return <div className={styles.formControl /*+ ' ' + (hasError? styles.error : '')*/}>
+        <div>
+            <input  {...input} {...props}/>
+        </div>
+        <div>
+           {/* {hasError && <span>{meta.error}</span>}*/}
         </div>
     </div>
 }
