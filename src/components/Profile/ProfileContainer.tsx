@@ -5,20 +5,20 @@ import {connect} from "react-redux";
 import {
     getStatus,
     getUserProfile,
-    ProfileType,
     savePhoto,
     saveProfile,
     updateStatus
 } from "../../redux/profile-reducer";
 import {AppStateType} from "../../redux/redux-store";
 import {RouteComponentProps, withRouter} from "react-router-dom";
+import {ProfileType} from "../../api/profile-api";
 
 type PathParamsType = {
     userId: string | undefined
 }
 
 
-type ownPropsType = mapStateToProps & mapDispatchToProps
+type ownPropsType = mapStateToPropsType & mapDispatchToProps
 type PropsType = RouteComponentProps<PathParamsType> & ownPropsType
 
 class ProfileContainer extends React.Component<PropsType> {
@@ -61,7 +61,7 @@ class ProfileContainer extends React.Component<PropsType> {
 }
 
 
-type mapStateToProps = {
+type mapStateToPropsType = {
     profile:  ProfileType
     status: string
     authorizedUserId: number | null
@@ -75,7 +75,7 @@ type mapDispatchToProps = {
     saveProfile: (userId: string, FormData: any) => void
 }
 
-let mapStateToProps = (state: AppStateType): mapStateToProps => ({
+let mapStateToProps = (state: AppStateType): mapStateToPropsType => ({
     profile: state.profilePage.profile,
     status: state.profilePage.status,
     authorizedUserId: state.auth.userId

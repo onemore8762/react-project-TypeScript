@@ -2,10 +2,9 @@ import {
     AddPostAC,
     deletePostAC,
     InitialStateProfileType,
-    postType,
     profileReducer,
-    ProfileType
 } from "./profile-reducer";
+import {postType, ProfileType} from "../api/profile-api";
 
 let initialState: InitialStateProfileType;
 

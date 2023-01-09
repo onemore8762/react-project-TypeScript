@@ -8,7 +8,6 @@ import {
     toggleIsFetching,
     toggleIsFollowingProgress,
     unFollow,
-    UserType,
 } from "../../redux/users-reducer";
 import Users from "./Users";
 import {Preloader} from "../common/Preloader/Preloader";
@@ -21,6 +20,7 @@ import {
     getTotalUsersCount,
     getUsers
 } from "../../redux/users-selectors";
+import {UserType} from "../../api/users-api";
 
 type UsersTypeProps = {
     users: UserType[]

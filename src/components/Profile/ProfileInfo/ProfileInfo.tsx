@@ -3,8 +3,8 @@ import s from './ProfileInfo.module.css'
 import {Preloader} from "../../common/Preloader/Preloader";
 import {ProfileStatusWithHooks} from "./ProfileStatusWithHooks";
 import photoProfile from '../../../assets/images/user.png'
-import {ProfileType} from "../../../redux/profile-reducer";
 import {ProfileFormik} from "./ProfileDataForm";
+import {ProfileType} from "../../../api/profile-api";
 
 type ProfileInfoType = {
     profile: ProfileType

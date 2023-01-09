@@ -1,8 +1,5 @@
 import {getAuthUserData} from "./auth-reducer";
 
-
-export const INITIALIZATION = 'INITIALIZATION'
-
 let initialState = {
     initialized: false
 }
@@ -11,7 +8,7 @@ type initialStateProfileType = typeof initialState
 
 export const appReducer = (state: initialStateProfileType = initialState, action: setUserDataACType): initialStateProfileType => {
     switch (action.type) {
-        case INITIALIZATION:
+        case 'INITIALIZATION':
             return {
                 ...state,
                 initialized: true
@@ -24,7 +21,7 @@ export const appReducer = (state: initialStateProfileType = initialState, action
 export type setUserDataACType = ReturnType<typeof initializedSuccess>
 
 
-export const initializedSuccess = () => ({type: INITIALIZATION} as const)
+export const initializedSuccess = () => ({type: 'INITIALIZATION'} as const)
 
 
 export const initializedApp = () => (dispatch: any) => {

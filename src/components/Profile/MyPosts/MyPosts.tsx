@@ -1,10 +1,10 @@
 import React from 'react';
 import s from './MyPosts.module.css';
 import {Posts} from "./Posts/Posts";
-import {postType} from "../../../redux/profile-reducer";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {maxLength, required} from "../../../utils/validators/validators";
 import {Textarea} from "../../common/FormsControls/FormsControls";
+import {postType} from "../../../api/profile-api";
 
 
 type MyPostsType = {

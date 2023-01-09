@@ -1,34 +1,23 @@
-import {AllActionType} from "./redux-store";
-import {Dispatch} from "redux";
-import {authApi} from "../api/api";
+import {AllActionType, AppThunk} from "./redux-store";
 import {stopSubmit} from "redux-form";
-
-
-export const SET_USER_DATA = 'react-samurai-TS/auth/SET_USER_DATA'
-export const SET_CAPTCHA_URL = 'react-samurai-TS/auth/CAPTCHA_URL'
+import {authApi} from "../api/auth-api";
 
 
 let initialState = {
-    userId: null,
-    login: null,
-    email: null,
+    userId: null as null | number,
+    login: null as null | string,
+    email: null as null | string,
     isAuth: false,
-    captchaUrl: null
+    captchaUrl: null as null | string
 }
 
-export type initialStateAuthType = {
-    userId: null | number
-    login: null | string
-    email: null | string
-    isAuth: boolean
-    captchaUrl: null | string
-}
+export type initialStateAuthType = typeof initialState
 
-export const authReducer = (state: initialStateAuthType = initialState, action: AllActionType): initialStateAuthType => {
+export const authReducer = (state = initialState, action: AllActionType): initialStateAuthType => {
     switch (action.type) {
-        case SET_USER_DATA:
+        case 'react-samurai-TS/auth/SET_USER_DATA':
             return {...state, ...action.payload}
-        case SET_CAPTCHA_URL:
+        case 'react-samurai-TS/auth/CAPTCHA_URL':
             debugger
             return {...state, ...action.payload}
         default:
@@ -36,20 +25,17 @@ export const authReducer = (state: initialStateAuthType = initialState, action: 
     }
 }
 
-export type authActionType = setUserDataACType | setCaptchaACType
-export type setUserDataACType = ReturnType<typeof setAuthUserDataAC>
-export type setCaptchaACType = ReturnType<typeof setCaptchaAC>
+export type authActionType = ReturnType<typeof setAuthUserDataAC> | ReturnType<typeof setCaptchaAC>
 
 
 export const setAuthUserDataAC = (userId: number | null, login: string | null, email: string | null, isAuth: boolean) => {
-    return {type: SET_USER_DATA, payload: {userId, login, email, isAuth}} as const
+    return {type: 'react-samurai-TS/auth/SET_USER_DATA', payload: {userId, login, email, isAuth}} as const
 }
 export const setCaptchaAC = (captchaUrl: string) => {
-    return {type: SET_CAPTCHA_URL, payload: {captchaUrl}} as const
+    return {type: 'react-samurai-TS/auth/CAPTCHA_URL', payload: {captchaUrl}} as const
 }
 
-
-export const getAuthUserData = () => async (dispatch: Dispatch) => {
+export const getAuthUserData = (): AppThunk => async (dispatch) => {
     const response = await authApi.me()
 
     if (response.data.resultCode === 0) {

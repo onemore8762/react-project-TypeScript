@@ -1,59 +1,32 @@
-import {Dispatch} from "redux";
-import {usersAPI} from "../api/api";
-
-const FOLLOW = 'react-samurai-TS/users/FOLLOW'
-const UNFOLLOW = 'react-samurai-TS/users/UNFOLLOW'
-const SET_USERS = 'react-samurai-TS/users/SET-USERS'
-const SET_CURRENT_PAGE = 'react-samurai-TS/users/SET-CURRENT-PAGE'
-const SET_TOTAL_COUNT = 'react-samurai-TS/users/SET-TOTAL-COUNT'
-const SET_LOADING = 'react-samurai-TS/users/SET-LOADING'
-const TOGGLE_IS_FOLLOWING_PROGRESS = 'react-samurai-TS/users/TOGGLE_IS_FOLLOWING_PROGRESS'
+import {usersAPI, UserType} from "../api/users-api";
+import {AppThunk} from "./redux-store";
 
 const initialState = {
-    users: [],
+    users: [] as UserType[],
     pageSize: 5,
     totalUsersCount: 0,
     currentPage: 1,
     isFetching: false,
-    followingInProgress: []
+    followingInProgress: [] as Array<number>
 }
-export type initialStateType = {
-    users: UserType[]
-    pageSize: number
-    totalUsersCount: number
-    currentPage: number
-    isFetching: boolean,
-    followingInProgress: Array<number>
-}
-
-export type UserType = {
-    id: number
-    name: string
-    uniqueUrlName: any
-    photos: {
-        small: any
-        large: any
-    }
-    followed: boolean
-    status: string
-}
+export type initialStateType = typeof initialState
 
 
-export const usersReducer = (state: initialStateType = initialState, action: UsersActionsType): initialStateType => {
+export const usersReducer = (state = initialState, action: UsersActionsType): initialStateType => {
     switch (action.type) {
-        case FOLLOW:
+        case 'react-samurai-TS/users/FOLLOW':
             return {...state, users: state.users.map(el => el.id === action.userID ? {...el, followed: true} : el)}
-        case UNFOLLOW:
+        case 'react-samurai-TS/users/UNFOLLOW':
             return {...state, users: state.users.map(el => el.id === action.userID ? {...el, followed: false} : el)}
-        case SET_USERS:
+        case 'react-samurai-TS/users/SET-USERS':
             return {...state, users: action.users}
-        case SET_CURRENT_PAGE:
+        case 'react-samurai-TS/users/SET-CURRENT-PAGE':
             return {...state, currentPage: action.currentPage}
-        case SET_TOTAL_COUNT:
+        case 'react-samurai-TS/users/SET-TOTAL-COUNT':
             return {...state, totalUsersCount: action.totalCount}
-        case SET_LOADING:
+        case 'react-samurai-TS/users/SET-LOADING':
             return {...state, isFetching: action.isLoading}
-        case TOGGLE_IS_FOLLOWING_PROGRESS:
+        case 'react-samurai-TS/users/TOGGLE_IS_FOLLOWING_PROGRESS':
             return {
                 ...state,
                 followingInProgress: action.isLoading
@@ -66,42 +39,44 @@ export const usersReducer = (state: initialStateType = initialState, action: Use
 
 }
 
-export type UsersActionsType = FollowACType
-    | UnFollowACType
-    | SetUsersACType
-    | SetCurrentPageACType
-    | SetTotalUsersCountACType
-    | toggleIsFetchingACType
-    | toggleIsFollowingProgressACType
+export type UsersActionsType =
+    ReturnType<typeof followSuccess>
+    | ReturnType<typeof unFollowSuccess>
+    | ReturnType<typeof setUsersAC>
+    | ReturnType<typeof setCurrentPage>
+    | ReturnType<typeof setTotalUsersCount>
+    | ReturnType<typeof toggleIsFetching>
+    | ReturnType<typeof toggleIsFollowingProgress>
 
-type FollowACType = ReturnType<typeof followSuccess>
-type UnFollowACType = ReturnType<typeof unFollowSuccess>
-type SetUsersACType = ReturnType<typeof setUsersAC>
-type SetCurrentPageACType = ReturnType<typeof setCurrentPage>
-type SetTotalUsersCountACType = ReturnType<typeof setTotalUsersCount>
-type toggleIsFetchingACType = ReturnType<typeof toggleIsFetching>
-type toggleIsFollowingProgressACType = ReturnType<typeof toggleIsFollowingProgress>
-
-export const followSuccess = (userID: number) => ({type: FOLLOW, userID} as const)
-export const unFollowSuccess = (userID: number) => ({type: UNFOLLOW, userID} as const)
-export const setUsersAC = (users: Array<UserType>) => ({type: SET_USERS, users} as const)
-export const setCurrentPage = (currentPage: number) => ({type: SET_CURRENT_PAGE, currentPage} as const)
-export const setTotalUsersCount = (totalCount: number) => ({type: SET_TOTAL_COUNT, totalCount} as const)
-export const toggleIsFetching = (isLoading: boolean) => ({type: SET_LOADING, isLoading} as const)
+export const followSuccess = (userID: number) => ({type: 'react-samurai-TS/users/FOLLOW', userID} as const)
+export const unFollowSuccess = (userID: number) => ({type: 'react-samurai-TS/users/UNFOLLOW', userID} as const)
+export const setUsersAC = (users: Array<UserType>) => ({type: 'react-samurai-TS/users/SET-USERS', users} as const)
+export const setCurrentPage = (currentPage: number) => ({
+    type: 'react-samurai-TS/users/SET-CURRENT-PAGE',
+    currentPage
+} as const)
+export const setTotalUsersCount = (totalCount: number) => ({
+    type: 'react-samurai-TS/users/SET-TOTAL-COUNT',
+    totalCount
+} as const)
+export const toggleIsFetching = (isLoading: boolean) => ({
+    type: 'react-samurai-TS/users/SET-LOADING',
+    isLoading
+} as const)
 export const toggleIsFollowingProgress = (isLoading: boolean, userId: number) => ({
-    type: TOGGLE_IS_FOLLOWING_PROGRESS,
+    type: 'react-samurai-TS/users/TOGGLE_IS_FOLLOWING_PROGRESS',
     isLoading,
     userId
 } as const)
 
-export const requestUsers = (currentPage: number, pageSize: number) => async (dispatch: Dispatch) => {
+export const requestUsers = (currentPage: number, pageSize: number): AppThunk => async (dispatch) => {
     const data = await usersAPI.getUsers(currentPage, pageSize)
     dispatch(setUsersAC(data.items))
     dispatch(setTotalUsersCount(data.totalCount))
     dispatch(toggleIsFetching(false))
 }
 
-export const follow = (userId: number) => async (dispatch: Dispatch) => {
+export const follow = (userId: number): AppThunk => async (dispatch) => {
     dispatch(toggleIsFollowingProgress(true, userId))
     const data = await usersAPI.follow(userId)
 
@@ -111,7 +86,7 @@ export const follow = (userId: number) => async (dispatch: Dispatch) => {
     dispatch(toggleIsFollowingProgress(false, userId))
 }
 
-export const unFollow = (userId: number) => async (dispatch: Dispatch) => {
+export const unFollow = (userId: number): AppThunk => async (dispatch) => {
     dispatch(toggleIsFollowingProgress(true, userId))
 
     const data = await usersAPI.unFollow(userId)
