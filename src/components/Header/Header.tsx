@@ -3,9 +3,11 @@ import s from './Header.module.css';
 import {NavLink} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {logout} from "../../redux/auth-reducer";
+import {Layout} from "antd";
 
+const { Header} = Layout;
 
-export const Header = () => {
+export const AppHeader = () => {
     const isAuth = useAppSelector(state => state.auth.isAuth)
     const login = useAppSelector(state => state.auth.login)
 
@@ -14,14 +16,14 @@ export const Header = () => {
         dispatch(logout())
     }
     return (
-        <header className={s.header}>
+        <Header style={{ position: 'fixed', top: 0, zIndex: 1, width: '100%', color: 'white'}}>
             <img src="https://shapka-youtube.ru/wp-content/uploads/2021/02/prikolnaya-avatarka-dlya-patsanov.jpg" alt={'photoSite'}/>
             <div className={s.loginBlock}>
                 {isAuth
                     ? <div>{login} - <button onClick={logoutCallBack}>logout</button> </div>
                     :<NavLink to={'/login'}>login</NavLink>}
             </div>
-        </header>
+        </Header>
 
     );
 }

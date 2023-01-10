@@ -1,31 +1,58 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {ProfileInfo} from "./ProfileInfo/ProfileInfo";
 import {MyPostsContainer} from "./MyPosts/MyPostContainer";
-import {ProfileType} from "../../api/profile-api";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
+import {RouteComponentProps, withRouter} from "react-router-dom";
+import {getStatus, getUserProfile, savePhoto, saveProfile, setStatus} from "../../redux/profile-reducer";
 
-type ProfileTypeProps ={
-    profile:  ProfileType
-    status: string
-    updateStatus: (status: string) => void
-    isOwner: boolean
-    savePhoto: (photoFile: any) => void
-    saveProfile: (userId: string, FormData: any) => void
 
+type PathParamsType = {
+    userId: string | undefined
 }
 
-export const Profile = (props : ProfileTypeProps) => {
+const Profile = (props : RouteComponentProps<PathParamsType>) => {
+    const profile = useAppSelector(state => state.profilePage.profile)
+    const status = useAppSelector(state => state.profilePage.status)
+    const authorizedUserId = useAppSelector(state =>  state.auth.userId)
+
+    const dispatch = useAppDispatch()
+    const updateStatusCallBack = (status: string) => {
+        dispatch(setStatus(status))
+    }
+    const savePhotoCallBack = (photoFile: any) => {
+        dispatch(savePhoto(photoFile))
+    }
+    const saveProfileCallBack = (userId: string, FormData: any) => {
+        dispatch(saveProfile(userId, FormData))
+    }
+    let userId = props.match.params.userId
+    useEffect(() => {
+        if (!userId) {
+            userId = authorizedUserId?.toString()
+            if(!userId){
+                props.history.push('/login')
+            }
+        }
+        if (userId) {
+            dispatch(getUserProfile(userId))
+            dispatch(getStatus(userId))
+        }
+    },[userId])
 
     return (
         <>
-            <ProfileInfo profile={props.profile}
-                         status={props.status}
-                         updateStatus={props.updateStatus}
-                         isOwner={props.isOwner}
-                         savePhoto={props.savePhoto}
-                         saveProfile={props.saveProfile}
+            <ProfileInfo profile={profile}
+                         status={status}
+                         updateStatus={updateStatusCallBack}
+                         isOwner={!props.match.params.userId}
+                         savePhoto={savePhotoCallBack}
+                         saveProfile={saveProfileCallBack}
             />
             <MyPostsContainer />
         </>
 
     );
 }
+
+
+export default withRouter(Profile)
