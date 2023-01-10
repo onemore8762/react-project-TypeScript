@@ -9,8 +9,11 @@ import {
     getTotalUsersCount,
     getUsers
 } from "../../redux/users-selectors";
-import {follow, requestUsers, setCurrentPage, unFollow} from "../../redux/users-reducer";
+import {FilterType, follow, requestUsers, setCurrentPage, unFollow} from "../../redux/users-reducer";
+import {Field, Form, Formik} from "formik";
+import {AppStateType} from "../../redux/redux-store";
 
+const getFilter = (state: AppStateType) => state.usersPage.filter
 
 export const Users: React.FC = () => {
     const users = useAppSelector(getUsers)
@@ -18,19 +21,22 @@ export const Users: React.FC = () => {
     const totalUsersCount = useAppSelector(getTotalUsersCount)
     const currentPage = useAppSelector(getCurrentPage)
     const followingInProgress = useAppSelector(getFollowingInProgress)
+    const filter = useAppSelector(getFilter)
 
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(requestUsers(currentPage, pageSize))
+        dispatch(requestUsers(currentPage, pageSize, filter))
     }, [])
 
 
     const onPageChanged = (page: number) => {
-        dispatch(setCurrentPage(page))
         if (page !== currentPage) {
-            dispatch(requestUsers(page, pageSize))
+            dispatch(requestUsers(page, pageSize, filter))
         }
+    }
+    const setFilter = (filter: FilterType) => {
+            dispatch(requestUsers(1, pageSize, filter))
     }
 
     const followCallBack = (userID: number) => {
@@ -41,10 +47,32 @@ export const Users: React.FC = () => {
     }
     return (
         <div>
+            <Formik
+                initialValues={{ term: filter.term, friend: filter.friend}}
+                onSubmit={(values) => {
+                    console.log(values)
+                    setFilter(values)
+                }}
+            >
+                {() => (
+                    <Form>
+                        <Field type="text" name="term"/>
+                        <Field as="select" name="friend" value={undefined}>
+                            <option value="null" defaultChecked={true}>All</option>
+                            <option value="true">Only followed</option>
+                            <option value="false">Only unFollowed</option>
+                        </Field>
+                        <button type="submit">
+                            Submit
+                        </button>
+                    </Form>
+                )}
+            </Formik>
             <Paginator currentPage={currentPage}
                        pageSize={pageSize}
                        onPageChanged={onPageChanged}
                        totalItems={totalUsersCount}/>
+
             <User users={users}
                   follow={followCallBack}
                   unFollow={unFollowCallBack}

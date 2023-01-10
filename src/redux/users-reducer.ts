@@ -7,7 +7,11 @@ const initialState = {
     totalUsersCount: 0,
     currentPage: 1,
     isFetching: false,
-    followingInProgress: [] as Array<number>
+    followingInProgress: [] as Array<number>,
+    filter: {
+        term: '',
+        friend: null as null | boolean
+    }
 }
 export type initialStateType = typeof initialState
 
@@ -26,6 +30,8 @@ export const usersReducer = (state = initialState, action: UsersActionsType): in
             return {...state, totalUsersCount: action.totalCount}
         case 'react-samurai-TS/users/SET-LOADING':
             return {...state, isFetching: action.isLoading}
+        case 'react-samurai-TS/users/SET-FILTER':
+            return {...state, filter: action.filter}
         case 'react-samurai-TS/users/TOGGLE_IS_FOLLOWING_PROGRESS':
             return {
                 ...state,
@@ -47,6 +53,7 @@ export type UsersActionsType =
     | ReturnType<typeof setTotalUsersCount>
     | ReturnType<typeof toggleIsFetching>
     | ReturnType<typeof toggleIsFollowingProgress>
+    | ReturnType<typeof setFilter>
 
 export const followSuccess = (userID: number) => ({type: 'react-samurai-TS/users/FOLLOW', userID} as const)
 export const unFollowSuccess = (userID: number) => ({type: 'react-samurai-TS/users/UNFOLLOW', userID} as const)
@@ -68,11 +75,17 @@ export const toggleIsFollowingProgress = (isLoading: boolean, userId: number) =>
     isLoading,
     userId
 } as const)
+export const setFilter = (filter: FilterType) => ({
+    type: 'react-samurai-TS/users/SET-FILTER',
+    filter
+} as const)
 
-export const requestUsers = (currentPage: number, pageSize: number): AppThunk => async (dispatch) => {
+export const requestUsers = (currentPage: number, pageSize: number, filter: FilterType): AppThunk => async (dispatch) => {
     dispatch(toggleIsFetching(true))
-    const data = await usersAPI.getUsers(currentPage, pageSize)
+    const data = await usersAPI.getUsers(currentPage, pageSize, filter)
+    dispatch(setFilter(filter))
     dispatch(setUsersAC(data.items))
+    dispatch(setCurrentPage(currentPage))
     dispatch(setTotalUsersCount(data.totalCount))
     dispatch(toggleIsFetching(false))
 }
@@ -96,4 +109,10 @@ export const unFollow = (userId: number): AppThunk => async (dispatch) => {
         dispatch(unFollowSuccess(userId))
     }
     dispatch(toggleIsFollowingProgress(false, userId))
+}
+
+
+export type FilterType = {
+    term: string,
+    friend: null | boolean
 }
