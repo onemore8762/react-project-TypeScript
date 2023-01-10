@@ -70,6 +70,7 @@ export const toggleIsFollowingProgress = (isLoading: boolean, userId: number) =>
 } as const)
 
 export const requestUsers = (currentPage: number, pageSize: number): AppThunk => async (dispatch) => {
+    dispatch(toggleIsFetching(true))
     const data = await usersAPI.getUsers(currentPage, pageSize)
     dispatch(setUsersAC(data.items))
     dispatch(setTotalUsersCount(data.totalCount))

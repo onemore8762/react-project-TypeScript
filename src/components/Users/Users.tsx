@@ -1,37 +1,54 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Paginator} from "../common/Paginator/Paginator";
 import {User} from "./User/User";
-import {UserType} from "../../api/users-api";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
+import {
+    getCurrentPage,
+    getFollowingInProgress,
+    getPageSize,
+    getTotalUsersCount,
+    getUsers
+} from "../../redux/users-selectors";
+import {follow, requestUsers, setCurrentPage, unFollow} from "../../redux/users-reducer";
 
 
-type UsersPropsType = {
-    users: UserType[]
-    currentPage: number
-    totalUsersCount: number
-    onPageChanged: (page: number) => void
-    follow: (userID: number) => void
-    unFollow: (userID: number) => void
-    pageSize: number
-    followingInProgress: Array<number>
-    toggleIsFollowingProgress: (isLoading: boolean, userId: number) => void
-}
+export const Users: React.FC = () => {
+    const users = useAppSelector(getUsers)
+    const pageSize = useAppSelector(getPageSize)
+    const totalUsersCount = useAppSelector(getTotalUsersCount)
+    const currentPage = useAppSelector(getCurrentPage)
+    const followingInProgress = useAppSelector(getFollowingInProgress)
+
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(requestUsers(currentPage, pageSize))
+    }, [])
 
 
-export const Users: React.FC<UsersPropsType> = (props) => {
+    const onPageChanged = (page: number) => {
+        dispatch(setCurrentPage(page))
+        if (page !== currentPage) {
+            dispatch(requestUsers(page, pageSize))
+        }
+    }
 
+    const followCallBack = (userID: number) => {
+        dispatch(follow(userID))
+    }
+    const unFollowCallBack = (userID: number) => {
+        dispatch(unFollow(userID))
+    }
     return (
         <div>
-            <Paginator currentPage={props.currentPage}
-                       pageSize={props.pageSize}
-                       onPageChanged={props.onPageChanged}
-                       totalItems={props.totalUsersCount}/>
-            <User users={props.users}
-                  follow={props.follow}
-                  unFollow={props.unFollow}
-                  followingInProgress={props.followingInProgress}
-                  toggleIsFollowingProgress={props.toggleIsFollowingProgress}/>
+            <Paginator currentPage={currentPage}
+                       pageSize={pageSize}
+                       onPageChanged={onPageChanged}
+                       totalItems={totalUsersCount}/>
+            <User users={users}
+                  follow={followCallBack}
+                  unFollow={unFollowCallBack}
+                  followingInProgress={followingInProgress}/>
         </div>
     );
 };
-
-export default Users;

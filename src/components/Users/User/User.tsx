@@ -8,7 +8,6 @@ type UserPropsType = {
     follow: (userID: number) => void
     unFollow: (userID: number) => void
     followingInProgress: Array<number>
-    toggleIsFollowingProgress: (isLoading: boolean, userId: number) => void
 }
 
 

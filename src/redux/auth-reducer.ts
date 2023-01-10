@@ -60,7 +60,7 @@ export const login = (email: string, password: string, rememberMe: boolean, capt
 }
 
 
-export const logout = () => async (dispatch: any) => {
+export const logout = (): AppThunk => async (dispatch) => {
     const response = await authApi.logout()
 
     if (response.data.resultCode === 0) {
@@ -68,9 +68,8 @@ export const logout = () => async (dispatch: any) => {
     }
 }
 
-export const getCaptcha = () => async (dispatch: any) => {
+export const getCaptcha = (): AppThunk => async (dispatch) => {
     const response = await authApi.captcha()
-    console.log(response.data)
     dispatch(setCaptchaAC(response.data.url))
 }
 

@@ -2,28 +2,22 @@ import React from 'react'
 import s from './Dialogs.module.css'
 import {DialogItems} from "./DialogItems/DialogItems";
 import {Message} from "./Message/Message";
-import {initialStateMessageType} from "../../redux/dialogs-reducer";
+import {SendMessageAC} from "../../redux/dialogs-reducer";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Textarea} from "../common/FormsControls/FormsControls";
 import {maxLength, required} from "../../utils/validators/validators";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 
-
-type DialogsPropsType = {
-    sendMessage: (newMessageBody: string) => void
-    dialogsPage: initialStateMessageType
-}
 
 let maxLength50 = maxLength(50)
 
-export const Dialogs: React.FC<DialogsPropsType> = (
-    {
-        sendMessage,
-        dialogsPage
-    }
-) => {
+const Dialogs: React.FC = () => {
+    const dialogsPage = useAppSelector(state => state.dialogsPage)
+
+    const dispatch = useAppDispatch()
 
     const onSubmit = (FormData: DataFormType) => {
-        sendMessage(FormData.newMessageBody)
+        dispatch(SendMessageAC(FormData.newMessageBody))
     }
 
     return (
@@ -65,3 +59,5 @@ const AddMessageForm : React.FC<InjectedFormProps<DataFormType>> = (props) => {
 }
 
 const AddMessageReduxForm = reduxForm<DataFormType>({form: 'dialogAddMessageForm'})(AddMessageForm)
+
+export default Dialogs
