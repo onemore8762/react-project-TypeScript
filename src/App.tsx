@@ -1,6 +1,6 @@
 import React, {lazy, useEffect} from 'react';
 import './App.css';
-import {Link, Route, Routes} from "react-router-dom";
+import {Link, Route, Routes, useLocation} from "react-router-dom";
 import {Preloader} from "./components/common/Preloader/Preloader";
 import {initializedApp} from "./redux/app-reducer";
 import {AppHeader} from "./components/Header/Header";
@@ -22,7 +22,7 @@ import {UsersPage} from "./components/Users/UsersPage";
 import {Login} from "./Login/Login";
 import logo from "./assets/images/logo4.png";
 
-const {Content, Footer, Sider} = Layout;
+const {Content, Sider} = Layout;
 
 const DialogsContainer = lazy(() => import("./components/Dialogs/Dialogs"))
 const ProfileContainer = lazy(() => import("./components/Profile/Profile"))
@@ -31,17 +31,23 @@ const ProfileContainer = lazy(() => import("./components/Profile/Profile"))
 export const App = () => {
     const initialized = useAppSelector(state => state.app.initialized)
     const dispatch = useAppDispatch()
+
+    const path = useLocation()
+    let location = ''
+
     useEffect(() => {
         dispatch(initializedApp())
     }, [])
 
-    // const {
-    //     token: {colorBgContainer},
-    // } = theme.useToken();
-
+    if(path.pathname.slice(0,8) === '/profile'){
+        location = path.pathname.slice(0,8)
+    }else{
+        location = path.pathname
+    }
     if (!initialized) return <div style={{display: "flex", justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
         <LoadingOutlined style={{ fontSize: 120 }} spin />
     </div>
+
     return (
         <Layout style={{backgroundColor: '#ececec'}}>
             <AppHeader/>
@@ -60,18 +66,17 @@ export const App = () => {
                         borderRadius: 10
                     }}
                 >
-                    <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']}>
-                        <Menu.Item key={1} icon={<UserOutlined/>}> <Link to='/profile'>Profile</Link></Menu.Item>
-                        <Menu.Item key={2} icon={<TeamOutlined/>}> <Link to='/users'>Users</Link></Menu.Item>
-                        <Menu.Item key={3} icon={<MessageOutlined/>}> <Link to='/dialogs'>Messages</Link></Menu.Item>
-                        <Menu.Item key={4} icon={<TwitterOutlined/>}> <Link to='/news'>News</Link></Menu.Item>
-                        <Menu.Item key={5} icon={<RedditOutlined/>}> <Link to='/music'>Music</Link></Menu.Item>
-                        <Menu.Item key={6} icon={<SettingOutlined/>}> <Link to='/settings'>Settings</Link></Menu.Item>
+                    <Menu theme="dark" mode="inline" defaultSelectedKeys={[`${location}`]}>
+                        <Menu.Item key={'/profile'} icon={<UserOutlined/>}> <Link to='/profile'>Profile</Link></Menu.Item>
+                        <Menu.Item key={'/users'} icon={<TeamOutlined/>}> <Link to='/users'>Users</Link></Menu.Item>
+                        <Menu.Item key={'/dialogs'} icon={<MessageOutlined/>}> <Link to='/dialogs'>Messages</Link></Menu.Item>
+                        <Menu.Item key={'/news'} icon={<TwitterOutlined/>}> <Link to='/news'>News</Link></Menu.Item>
+                        <Menu.Item key={'/music'} icon={<RedditOutlined/>}> <Link to='/music'>Music</Link></Menu.Item>
+                        <Menu.Item key={'/settings'} icon={<SettingOutlined/>}> <Link to='/settings'>Settings</Link></Menu.Item>
                     </Menu>
                 </Sider>
-                <Layout style={{backgroundColor: '#ececec'}}>
-                    <Content style={{margin: '65px 16px 0', overflow: 'initial', minHeight: '91vh'}}>
-                        <div style={{padding: '15px 25px'}}>
+                <Layout style={{position:'relative',backgroundColor: '#001529', margin: 50, marginTop: 100, color: '#ffffff', borderRadius: 15, minHeight: "85vh"}}>
+                    <Content >
                             <React.Suspense fallback={<Preloader/>}>
                                 <Routes>
                                     <Route path='/profile/:userId?' element={<ProfileContainer/>}/>
@@ -83,14 +88,15 @@ export const App = () => {
                                     <Route path='/login' element={<Login/>}/>
                                 </Routes>
                             </React.Suspense>
-                        </div>
                     </Content>
                 </Layout>
-
+                {/*<Footer*/}
+                {/*    style={{textAlign: 'center', width: '100%', background: '#001529', color: 'white', position: 'absolute', bottom: 0}}>*/}
+                {/*    Reaj ©2023 Created by Denis Churkin*/}
+                {/*</Footer>*/}
             </Layout>
-            <Footer
-                style={{textAlign: 'center', width: '100%', margin: '0 auto', background: '#001529', color: 'white'}}>Reaj
-                ©2023 Created by Denis Churkin</Footer>
         </Layout>
     );
 }
+
+

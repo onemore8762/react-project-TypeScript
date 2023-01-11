@@ -1,36 +1,31 @@
 import React from 'react';
-import s from "./Paginator.module.css";
+import {Pagination, PaginationProps} from "antd";
 
 
 type ItemsPropsType = {
     currentPage: number
     totalItems: number
-    onPageChanged: (page: number) => void
+    onPageChanged: (page: number, pageSize: number) => void
     pageSize: number
 }
 
 
 export const Paginator: React.FC<ItemsPropsType> = (props) => {
-
-    let pagesCount = Math.ceil(props.totalItems / props.pageSize)
-
-    let pages = [1, props.currentPage - 1, props.currentPage, props.currentPage + 1, pagesCount]
-
-    if (props.currentPage < 4) {
-        pages = [1, 2, 3, 4, pagesCount]
-    }
-    if (props.currentPage > pagesCount - 2) {
-        pages = [1, pagesCount - 3, pagesCount - 2, pagesCount - 1, pagesCount]
-    }
+    const showTotal: PaginationProps['showTotal'] = (total) => `Total ${total} users`;
     return (
-        <div>
-            {pages.map((p,index) => {
-                return <span className={props.currentPage == p ? s.selectedPage + ' ' + s.default : s.default}
-                             key={index}
-                             onClick={() => {
-                                 props.onPageChanged(p)
-                             }}>{p}</span>
-            })}
+        <div style={{display: 'flex', justifyContent: 'center'}}>
+            <Pagination
+                style={{backgroundColor: '#ececec',position:'absolute', color: '#000000', bottom: 0, padding:5, borderTopLeftRadius: 5, borderTopRightRadius: 5, borderBottomLeftRadius: -5}}
+                size="small"
+                onChange={(page,pageSize)=> props.onPageChanged(page, pageSize)}
+                current={props.currentPage}
+                pageSize={props.pageSize}
+                pageSizeOptions={[7,21,42]}
+                total={props.totalItems}
+                showTotal={showTotal}
+                showSizeChanger
+                showQuickJumper
+            />
         </div>
     );
 };

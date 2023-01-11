@@ -1,32 +1,49 @@
 import React from 'react';
 import s from './MyPosts.module.css';
 import {Posts} from "./Posts/Posts";
-import {Field, InjectedFormProps, reduxForm} from "redux-form";
-import {maxLength, required} from "../../../utils/validators/validators";
-import {Textarea} from "../../common/FormsControls/FormsControls";
-import {postType} from "../../../api/profile-api";
 
+import TextArea from "antd/es/input/TextArea";
+import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
+import {AddPostAC} from "../../../redux/profile-reducer";
+import {Form, Formik} from "formik";
+import {Button} from "antd";
 
-type MyPostsType = {
-    addPost: (post: string) => void
-    posts: Array<postType>
-}
 
 type FormDataType = {
     newPostText: string
 }
 
-const maxLength10 = maxLength(10)
 
-export const MyPosts: React.FC<MyPostsType> = React.memo(({addPost, posts}) => {
-
+export const MyPosts: React.FC = React.memo(() => {
+        const posts = useAppSelector(state => state.profilePage.posts)
+        const dispatch = useAppDispatch()
         const onSubmit = (FormData: FormDataType) => {
-            addPost(FormData.newPostText)
+            dispatch(AddPostAC(FormData.newPostText))
         }
         return (
             <div className={s.postsBlock}>
-                MyPosts
-                <AddNewPostReduxForm onSubmit={onSubmit}/>
+                <h2>MyPosts</h2>
+                <Formik
+                    initialValues={{newPostText: ''}}
+                    onSubmit={(values,formikHelpers) => {
+                        onSubmit(values)
+                        formikHelpers.setFieldValue('newPostText', '')
+                    }}
+                >
+                    {({setFieldValue, getFieldProps, submitForm}) => (
+                        <Form>
+                            <TextArea
+                                value={getFieldProps('newPostText').value}
+                                onChange={(e) => setFieldValue('newPostText', e.target.value)}
+                                placeholder="Controlled autosize"
+                                autoSize={{ minRows: 3, maxRows: 5 }}
+                            />
+                            <Button onClick={submitForm} style={{marginTop: 15}}>
+                                Submit
+                            </Button>
+                        </Form>
+                    )}
+                </Formik>
                 <div className={s.posts}>
                     {posts.map(el => {
                         return <Posts key={el.id} message={el.message} like={el.likesCount}/>
@@ -40,16 +57,3 @@ export const MyPosts: React.FC<MyPostsType> = React.memo(({addPost, posts}) => {
 )
 
 
-const AddNewPostForm : React.FC<InjectedFormProps<FormDataType>> = (props) => {
-    return <form onSubmit={props.handleSubmit}>
-        <div>
-            <Field placeholder={'Введите пост'} name={'newPostText'} component={Textarea}
-            validate={[required, maxLength10]}></Field>
-        </div>
-        <div>
-            <button>Add</button>
-        </div>
-    </form>
-}
-
-const AddNewPostReduxForm = reduxForm<FormDataType>({form: 'Posts'})(AddNewPostForm)

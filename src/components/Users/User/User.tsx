@@ -1,7 +1,8 @@
 import React from 'react';
-import userPhoto from "../../../assets/images/user.png";
 import {NavLink} from "react-router-dom";
 import {UserType} from "../../../api/users-api";
+import {UserOutlined} from "@ant-design/icons";
+import {Avatar, Button} from "antd";
 
 type UserPropsType = {
     users: UserType[]
@@ -14,26 +15,23 @@ type UserPropsType = {
 export const User: React.FC<UserPropsType> = (props) => {
 
     return (
-        <div>
+        <div style={{display: 'flex', flexWrap: "wrap", marginLeft:10, height: 752, overflowY: "scroll"}}>
             {props.users.map(el => {
                 return (
-                    <div key={el.id}>
+                    <div key={el.id} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 10, width:'145px'}}>
                         <NavLink to={'/profile/' + el.id}>
-                            <img src={el.photos.small != null ? el.photos.small : userPhoto} style={{width: '100px'}} alt={'photo-user'}/>
+                            <Avatar size={128} src={el.photos.small} icon={<UserOutlined />}/>
                         </NavLink>
-                        <div>{el.name}</div>
-                        <div>{'el.location.city'}</div>
-                        <div>{'el.location.country'}</div>
+                        <h3>{el.name}</h3>
                         {el.followed
-                            ? <button disabled={props.followingInProgress.some(id => id === el.id)} onClick={() => {
+                            ? <Button disabled={props.followingInProgress.some(id => id === el.id)} onClick={() => {
                                 props.unFollow(el.id)
-                            }}>unfollowed</button>
-                            : <button disabled={props.followingInProgress.some(id => id === el.id)} onClick={() => {
+                            }}>unfollowed</Button>
+                            : <Button disabled={props.followingInProgress.some(id => id === el.id)} onClick={() => {
                                 props.follow(el.id)
-                            }}>followed</button>
+                            }}>followed</Button>
 
                         }
-                        <div>-------</div>
                     </div>
                 )
             })}

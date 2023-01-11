@@ -4,14 +4,16 @@ import {User} from "./User/User";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {
     getCurrentPage,
-    getFollowingInProgress,
+    getFollowingInProgress, getIsFetching,
     getPageSize,
     getTotalUsersCount,
     getUsers
 } from "../../redux/users-selectors";
-import {FilterType, follow, requestUsers, setCurrentPage, unFollow} from "../../redux/users-reducer";
-import {Field, Form, Formik} from "formik";
+import {FilterType, follow, requestUsers, unFollow} from "../../redux/users-reducer";
+import {Form, Formik} from "formik";
 import {AppStateType} from "../../redux/redux-store";
+import {Button, Input, Select} from "antd";
+import {Preloader} from "../common/Preloader/Preloader";
 
 const getFilter = (state: AppStateType) => state.usersPage.filter
 
@@ -22,7 +24,7 @@ export const Users: React.FC = () => {
     const currentPage = useAppSelector(getCurrentPage)
     const followingInProgress = useAppSelector(getFollowingInProgress)
     const filter = useAppSelector(getFilter)
-
+    const isFetching = useAppSelector(getIsFetching)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -30,9 +32,9 @@ export const Users: React.FC = () => {
     }, [])
 
 
-    const onPageChanged = (page: number) => {
-        if (page !== currentPage) {
-            dispatch(requestUsers(page, pageSize, filter))
+    const onPageChanged = (page: number, newPageSize: number) => {
+        if (page !== currentPage || pageSize !== newPageSize) {
+            dispatch(requestUsers(page, newPageSize, filter))
         }
     }
     const setFilter = (filter: FilterType) => {
@@ -46,37 +48,50 @@ export const Users: React.FC = () => {
         dispatch(unFollow(userID))
     }
     return (
-        <div>
+        <div >
             <Formik
                 initialValues={{ term: filter.term, friend: filter.friend}}
                 onSubmit={(values) => {
-                    console.log(values)
                     setFilter(values)
                 }}
             >
-                {() => (
-                    <Form>
-                        <Field type="text" name="term"/>
-                        <Field as="select" name="friend" value={undefined}>
-                            <option value="null" defaultChecked={true}>All</option>
-                            <option value="true">Only followed</option>
-                            <option value="false">Only unFollowed</option>
-                        </Field>
-                        <button type="submit">
-                            Submit
-                        </button>
+                {({submitForm, setFieldValue, getFieldProps}) => (
+                    <Form style={{display: 'flex', justifyContent: 'center'}}>
+                        <Input value={getFieldProps('term').value} onChange={(e)=> setFieldValue('term',e.currentTarget.value)} style={{width: 200}}/>
+                        <Select defaultValue='All'
+                                style={{ width: 140 }}
+                                onChange={(e) => setFieldValue('friend',e)}
+                                options={[
+                                    {
+                                        value: 'All',
+                                        label: 'All',
+                                    },
+                                    {
+                                        value: 'true',
+                                        label: 'Only followed',
+                                    },
+                                    {
+                                        value: 'false',
+                                        label: 'Only unFollowed',
+                                    }
+                                ]}/>
+
+
+                        <Button onClick={submitForm}>
+                            Find
+                        </Button>
                     </Form>
                 )}
             </Formik>
+            {isFetching && <Preloader/>}
+            {!isFetching && <User users={users}
+                                  follow={followCallBack}
+                                  unFollow={unFollowCallBack}
+                                  followingInProgress={followingInProgress}/>}
             <Paginator currentPage={currentPage}
                        pageSize={pageSize}
                        onPageChanged={onPageChanged}
                        totalItems={totalUsersCount}/>
-
-            <User users={users}
-                  follow={followCallBack}
-                  unFollow={unFollowCallBack}
-                  followingInProgress={followingInProgress}/>
         </div>
     );
 };

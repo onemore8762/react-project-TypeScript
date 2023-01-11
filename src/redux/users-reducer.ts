@@ -3,7 +3,7 @@ import {AppThunk} from "./redux-store";
 
 const initialState = {
     users: [] as UserType[],
-    pageSize: 5,
+    pageSize: 7,
     totalUsersCount: 0,
     currentPage: 1,
     isFetching: false,
@@ -32,6 +32,8 @@ export const usersReducer = (state = initialState, action: UsersActionsType): in
             return {...state, isFetching: action.isLoading}
         case 'react-samurai-TS/users/SET-FILTER':
             return {...state, filter: action.filter}
+        case 'react-samurai-TS/users/SET-PAGE-SIZE':
+            return {...state, pageSize: action.pageSize}
         case 'react-samurai-TS/users/TOGGLE_IS_FOLLOWING_PROGRESS':
             return {
                 ...state,
@@ -54,6 +56,7 @@ export type UsersActionsType =
     | ReturnType<typeof toggleIsFetching>
     | ReturnType<typeof toggleIsFollowingProgress>
     | ReturnType<typeof setFilter>
+    | ReturnType<typeof setPageSize>
 
 export const followSuccess = (userID: number) => ({type: 'react-samurai-TS/users/FOLLOW', userID} as const)
 export const unFollowSuccess = (userID: number) => ({type: 'react-samurai-TS/users/UNFOLLOW', userID} as const)
@@ -79,13 +82,17 @@ export const setFilter = (filter: FilterType) => ({
     type: 'react-samurai-TS/users/SET-FILTER',
     filter
 } as const)
-
+export const setPageSize = (pageSize: number) => ({
+    type: 'react-samurai-TS/users/SET-PAGE-SIZE',
+    pageSize
+} as const)
 export const requestUsers = (currentPage: number, pageSize: number, filter: FilterType): AppThunk => async (dispatch) => {
     dispatch(toggleIsFetching(true))
     const data = await usersAPI.getUsers(currentPage, pageSize, filter)
     dispatch(setFilter(filter))
     dispatch(setUsersAC(data.items))
     dispatch(setCurrentPage(currentPage))
+    dispatch(setPageSize(pageSize))
     dispatch(setTotalUsersCount(data.totalCount))
     dispatch(toggleIsFetching(false))
 }

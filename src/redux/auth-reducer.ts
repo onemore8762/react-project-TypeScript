@@ -1,5 +1,4 @@
 import {AllActionType, AppThunk} from "./redux-store";
-import {stopSubmit} from "redux-form";
 import {authApi} from "../api/auth-api";
 import {getUserProfile} from "./profile-reducer";
 
@@ -19,7 +18,6 @@ export const authReducer = (state = initialState, action: AllActionType): initia
         case 'react-samurai-TS/auth/SET_USER_DATA':
             return {...state, ...action.payload}
         case 'react-samurai-TS/auth/CAPTCHA_URL':
-            debugger
             return {...state, ...action.payload}
         default:
             return state
@@ -52,12 +50,14 @@ export const login = (email: string, password: string, rememberMe: boolean, capt
 
     if (response.data.resultCode === 0) {
         dispatch(getAuthUserData())
+        setCaptchaAC('')
     } else {
         if (response.data.resultCode === 10) {
             dispatch(getCaptcha())
+            return response.data.messages
         }
         let message = response.data.messages.length > 0 ? response.data.messages[0] : 'Some error'
-        dispatch(stopSubmit('login', {_error: message}))
+        return message
     }
 }
 

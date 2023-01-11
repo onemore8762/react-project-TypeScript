@@ -1,16 +1,20 @@
 import React, {useEffect} from 'react';
 import {ProfileInfo} from "./ProfileInfo/ProfileInfo";
-import {MyPostsContainer} from "./MyPosts/MyPostContainer";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {getStatus, getUserProfile, savePhoto, saveProfile, setStatus} from "../../redux/profile-reducer";
 import {Navigate, useParams} from "react-router-dom";
+import {selectIsAuth, selectProfile, selectStatusProfile, selectUserIdAuth} from "./selectors";
+import {MyPosts} from "./MyPosts/MyPosts";
+
 
 const Profile = () => {
-    const profile = useAppSelector(state => state.profilePage.profile)
-    const status = useAppSelector(state => state.profilePage.status)
-    const authorizedUserId = useAppSelector(state =>  state.auth.userId)
-    const isAuth = useAppSelector(state =>  state.auth.isAuth)
+    const profile = useAppSelector(selectProfile)
+    const status = useAppSelector(selectStatusProfile)
+    const authorizedUserId = useAppSelector(selectUserIdAuth)
+    const isAuth = useAppSelector(selectIsAuth)
+
     const dispatch = useAppDispatch()
+    const params = useParams()
 
     const updateStatusCallBack = (status: string) => {
         dispatch(setStatus(status))
@@ -21,7 +25,7 @@ const Profile = () => {
     const saveProfileCallBack = (userId: string, FormData: any) => {
         dispatch(saveProfile(userId, FormData))
     }
-    const params = useParams()
+
     let userId = params.userId
     useEffect(() => {
         if (!userId) {
@@ -39,11 +43,11 @@ const Profile = () => {
             <ProfileInfo profile={profile}
                          status={status}
                          updateStatus={updateStatusCallBack}
-                         isOwner={true}
+                         isOwner={!userId}
                          savePhoto={savePhotoCallBack}
                          saveProfile={saveProfileCallBack}
             />
-            <MyPostsContainer />
+            <MyPosts />
         </>
 
     );
