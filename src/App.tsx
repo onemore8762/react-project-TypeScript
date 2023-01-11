@@ -1,10 +1,11 @@
 import React, {lazy, useEffect} from 'react';
 import './App.css';
-import {Link, Route, Switch} from "react-router-dom";
+import {Link, Route, Routes} from "react-router-dom";
 import {Preloader} from "./components/common/Preloader/Preloader";
 import {initializedApp} from "./redux/app-reducer";
 import {AppHeader} from "./components/Header/Header";
 import {
+    LoadingOutlined,
     MessageOutlined,
     RedditOutlined,
     SettingOutlined,
@@ -13,12 +14,13 @@ import {
     UserOutlined
 } from '@ant-design/icons';
 import {useAppDispatch, useAppSelector} from "./redux/hooks";
-import {Layout, Menu, theme} from 'antd';
+import {Layout, Menu} from 'antd';
 import {News} from "./components/News/News";
 import {Music} from "./components/Music/Music";
 import {Settings} from "./components/Settings/Settings";
 import {UsersPage} from "./components/Users/UsersPage";
 import {Login} from "./Login/Login";
+import logo from "./assets/images/logo4.png";
 
 const {Content, Footer, Sider} = Layout;
 
@@ -33,23 +35,26 @@ export const App = () => {
         dispatch(initializedApp())
     }, [])
 
-    const {
-        token: {colorBgContainer},
-    } = theme.useToken();
-    if (!initialized) return <Preloader/>
+    // const {
+    //     token: {colorBgContainer},
+    // } = theme.useToken();
+
+    if (!initialized) return <div style={{display: "flex", justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+        <LoadingOutlined style={{ fontSize: 120 }} spin />
+    </div>
     return (
         <Layout style={{backgroundColor: '#ececec'}}>
-
             <AppHeader/>
-
-            <Layout className="site-layout" style={{marginLeft: 200}}>
+            <Layout style={{margin: '0 auto', width: '70vw', background: '#ececec'}}>
+                <div style={{position: 'fixed', top: 5, zIndex: 10, display: "flex"}}>
+                    <img src={logo} alt={'photoSite'} style={{width: '50px', marginRight: '10px'}}/>
+                    <div style={{color: 'rgba(252,119,11,0.96)', fontSize: '36px', fontStyle: 'italic'}}>HashTag</div>
+                </div>
                 <Sider
                     theme='dark'
                     style={{
                         overflow: 'auto',
-                        height: '80vh',
-                        position: 'fixed',
-                        left: 10,
+                        height: '500px',
                         top: 100,
                         bottom: 0,
                         borderRadius: 10
@@ -65,25 +70,27 @@ export const App = () => {
                     </Menu>
                 </Sider>
                 <Layout style={{backgroundColor: '#ececec'}}>
-                    <Content style={{margin: '24px 16px 0', overflow: 'initial'}}>
-                        <div style={{padding: '75px 25px'}}>
+                    <Content style={{margin: '65px 16px 0', overflow: 'initial', minHeight: '91vh'}}>
+                        <div style={{padding: '15px 25px'}}>
                             <React.Suspense fallback={<Preloader/>}>
-                                <Switch>
-                                    <Route path='/profile/:userId?' render={() => <ProfileContainer/>}/>
-                                    <Route path='/dialogs' render={() => <DialogsContainer/>}/>
-                                    <Route path='/news' render={News}/>
-                                    <Route path='/music' render={Music}/>
-                                    <Route path='/settings' render={Settings}/>
-                                    <Route path='/users' render={() => <UsersPage/>}/>
-                                    <Route path='/login' render={() => <Login/>}/>
-                                </Switch>
+                                <Routes>
+                                    <Route path='/profile/:userId?' element={<ProfileContainer/>}/>
+                                    <Route path='/dialogs' element={<DialogsContainer/>}/>
+                                    <Route path='/news' element={<News/>}/>
+                                    <Route path='/music' element={<Music/>}/>
+                                    <Route path='/settings' element={<Settings/>}/>
+                                    <Route path='/users' element={<UsersPage/>}/>
+                                    <Route path='/login' element={<Login/>}/>
+                                </Routes>
                             </React.Suspense>
                         </div>
                     </Content>
-                    <Footer style={{textAlign: 'center'}}>Reaj ©2023 Created by Denis Churkin</Footer>
                 </Layout>
 
             </Layout>
+            <Footer
+                style={{textAlign: 'center', width: '100%', margin: '0 auto', background: '#001529', color: 'white'}}>Reaj
+                ©2023 Created by Denis Churkin</Footer>
         </Layout>
     );
 }

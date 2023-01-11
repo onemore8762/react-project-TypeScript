@@ -2,20 +2,16 @@ import React, {useEffect} from 'react';
 import {ProfileInfo} from "./ProfileInfo/ProfileInfo";
 import {MyPostsContainer} from "./MyPosts/MyPostContainer";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {RouteComponentProps, withRouter} from "react-router-dom";
 import {getStatus, getUserProfile, savePhoto, saveProfile, setStatus} from "../../redux/profile-reducer";
+import {Navigate, useParams} from "react-router-dom";
 
-
-type PathParamsType = {
-    userId: string | undefined
-}
-
-const Profile = (props : RouteComponentProps<PathParamsType>) => {
+const Profile = () => {
     const profile = useAppSelector(state => state.profilePage.profile)
     const status = useAppSelector(state => state.profilePage.status)
     const authorizedUserId = useAppSelector(state =>  state.auth.userId)
-
+    const isAuth = useAppSelector(state =>  state.auth.isAuth)
     const dispatch = useAppDispatch()
+
     const updateStatusCallBack = (status: string) => {
         dispatch(setStatus(status))
     }
@@ -25,13 +21,11 @@ const Profile = (props : RouteComponentProps<PathParamsType>) => {
     const saveProfileCallBack = (userId: string, FormData: any) => {
         dispatch(saveProfile(userId, FormData))
     }
-    let userId = props.match.params.userId
+    const params = useParams()
+    let userId = params.userId
     useEffect(() => {
         if (!userId) {
             userId = authorizedUserId?.toString()
-            if(!userId){
-                props.history.push('/login')
-            }
         }
         if (userId) {
             dispatch(getUserProfile(userId))
@@ -39,12 +33,13 @@ const Profile = (props : RouteComponentProps<PathParamsType>) => {
         }
     },[userId])
 
+    if(!isAuth) return <Navigate to={'/login'}/>
     return (
         <>
             <ProfileInfo profile={profile}
                          status={status}
                          updateStatus={updateStatusCallBack}
-                         isOwner={!props.match.params.userId}
+                         isOwner={true}
                          savePhoto={savePhotoCallBack}
                          saveProfile={saveProfileCallBack}
             />
@@ -54,5 +49,4 @@ const Profile = (props : RouteComponentProps<PathParamsType>) => {
     );
 }
 
-
-export default withRouter(Profile)
+export default Profile

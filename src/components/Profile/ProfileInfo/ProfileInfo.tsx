@@ -30,9 +30,7 @@ export const ProfileInfo = (props: ProfileInfoType) => {
 
     return (
         <div>
-            <div>
-                <img src="https://interier-foto.ru/wp-content/uploads/dlinnye-foto-4.jpg" width={'950px'} alt='photo'/>
-            </div>
+
             <h2>{props.profile.fullName}</h2>
             <div className={s.descriptionBlock}>
                 <img src={props.profile.photos.large || photoProfile} alt='userPhoto' height={'200px'}/>

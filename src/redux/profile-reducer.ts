@@ -30,7 +30,8 @@ const initialState = {
             small: ''
         }
     } as ProfileType,
-    status: ""
+    status: "",
+    myPhoto: ''
 }
 
 export type InitialStateProfileType = typeof initialState
@@ -54,6 +55,8 @@ export const profileReducer = (state = initialState, action: AllActionType): Ini
             return {...state, status: action.status}
         case 'react-samurai-TS/profile/SAVE_PHOTO_SUCCESS':
             return {...state, profile: {...state.profile, photos: action.photos}}
+        case 'react-samurai-TS/profile/SET_MY_PHOTO':
+            return {...state, myPhoto: action.photo}
         default:
             return state
     }
@@ -64,6 +67,7 @@ export type ProfileActionType = ReturnType<typeof AddPostAC>
     | ReturnType<typeof setStatus>
     | ReturnType<typeof deletePostAC>
     | ReturnType<typeof savePhotoSuccess>
+    | ReturnType<typeof setMyPhoto>
 
 export const AddPostAC = (newPostText: string) => ({type: 'react-samurai-TS/profile/ADD_POST', newPostText} as const)
 export const SetUserProfileAC = (profile: ProfileType) => ({
@@ -79,9 +83,20 @@ export const savePhotoSuccess = (photos: PhotosType) => ({
     type: 'react-samurai-TS/profile/SAVE_PHOTO_SUCCESS',
     photos: photos
 } as const)
+export const setMyPhoto = (photo: string) => ({
+    type: 'react-samurai-TS/profile/SET_MY_PHOTO',
+    photo
+} as const)
 
-export const getUserProfile = (userId: string): AppThunk => async (dispatch) => {
+export const getUserProfile = (userId: string): AppThunk => async (dispatch, getState) => {
     const data = await profileAPI.getProfile(userId)
+    const myPhoto = getState().profilePage.myPhoto
+    if(!myPhoto) {
+        const userIdAuth = getState().auth.userId
+        if(userIdAuth === data.userId){
+            dispatch(setMyPhoto(data.photos.large))
+        }
+    }
 
     dispatch(SetUserProfileAC(data))
 }

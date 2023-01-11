@@ -3,7 +3,7 @@ import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../components/common/FormsControls/FormsControls";
 import {required} from "../utils/validators/validators";
 import {getCaptcha, login} from "../redux/auth-reducer";
-import {Redirect} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import s from '../components/common/FormsControls/FormsControls.module.css'
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 
@@ -58,7 +58,7 @@ export const Login = () => {
     const onSubmit = (formData: FormDataType) => {
         dispatch(login(formData.email, formData.password, formData.rememberMe, formData.captcha))
     }
-    if(isAuth) return <Redirect to={'/profile'}/>
+    if(isAuth) return <Navigate to={'/profile'}/>
     return (
         <div>
             <h1>Login</h1>

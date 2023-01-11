@@ -1,10 +1,11 @@
 import {AllActionType, AppThunk} from "./redux-store";
 import {stopSubmit} from "redux-form";
 import {authApi} from "../api/auth-api";
+import {getUserProfile} from "./profile-reducer";
 
 
 let initialState = {
-    userId: null as null | number,
+    userId: null as null | string,
     login: null as null | string,
     email: null as null | string,
     isAuth: false,
@@ -28,7 +29,7 @@ export const authReducer = (state = initialState, action: AllActionType): initia
 export type authActionType = ReturnType<typeof setAuthUserDataAC> | ReturnType<typeof setCaptchaAC>
 
 
-export const setAuthUserDataAC = (userId: number | null, login: string | null, email: string | null, isAuth: boolean) => {
+export const setAuthUserDataAC = (userId: string | null, login: string | null, email: string | null, isAuth: boolean) => {
     return {type: 'react-samurai-TS/auth/SET_USER_DATA', payload: {userId, login, email, isAuth}} as const
 }
 export const setCaptchaAC = (captchaUrl: string) => {
@@ -41,6 +42,7 @@ export const getAuthUserData = (): AppThunk => async (dispatch) => {
     if (response.data.resultCode === 0) {
         let {id, login, email} = response.data.data
         dispatch(setAuthUserDataAC(id, login, email, true))
+        dispatch(getUserProfile(id))
     }
 }
 

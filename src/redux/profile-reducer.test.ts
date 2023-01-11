@@ -16,7 +16,8 @@ beforeEach(() => {
             {id: '312123', message: 'What you doing?', likesCount: 15},
         ] as Array<postType>,
         profile: {} as ProfileType,
-        status: ""
+        status: "",
+        myPhoto: ''
     }
 })
 
