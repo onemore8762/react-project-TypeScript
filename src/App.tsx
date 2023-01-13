@@ -22,10 +22,12 @@ import {UsersPage} from "./components/Users/UsersPage";
 import {Login} from "./Login/Login";
 import logo from "./assets/images/logo4.png";
 
+
 const {Content, Sider} = Layout;
 
 const DialogsContainer = lazy(() => import("./components/Dialogs/Dialogs"))
 const ProfileContainer = lazy(() => import("./components/Profile/Profile"))
+const ChatPage = lazy(() => import("./pages/Chat/ChatPage"))
 
 
 export const App = () => {
@@ -38,7 +40,6 @@ export const App = () => {
     useEffect(() => {
         dispatch(initializedApp())
     }, [])
-
     if(path.pathname.slice(0,8) === '/profile'){
         location = path.pathname.slice(0,8)
     }else{
@@ -73,6 +74,7 @@ export const App = () => {
                         <Menu.Item key={'/news'} icon={<TwitterOutlined/>}> <Link to='/news'>News</Link></Menu.Item>
                         <Menu.Item key={'/music'} icon={<RedditOutlined/>}> <Link to='/music'>Music</Link></Menu.Item>
                         <Menu.Item key={'/settings'} icon={<SettingOutlined/>}> <Link to='/settings'>Settings</Link></Menu.Item>
+                        <Menu.Item key={'/chat'} icon={<SettingOutlined/>}> <Link to='/chat'>Chat</Link></Menu.Item>
                     </Menu>
                 </Sider>
                 <Layout style={{position:'relative',backgroundColor: '#001529', margin: 50, marginTop: 100, color: '#ffffff', borderRadius: 15, minHeight: "85vh"}}>
@@ -86,6 +88,7 @@ export const App = () => {
                                     <Route path='/settings' element={<Settings/>}/>
                                     <Route path='/users' element={<UsersPage/>}/>
                                     <Route path='/login' element={<Login/>}/>
+                                    <Route path='/chat' element={<ChatPage/>}/>
                                 </Routes>
                             </React.Suspense>
                     </Content>
