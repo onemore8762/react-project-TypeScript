@@ -7,6 +7,7 @@ import {authActionType, authReducer} from "./auth-reducer";
 import thunk, {ThunkAction, ThunkDispatch} from "redux-thunk";
 import {reducer as formReducer} from "redux-form";
 import {appReducer} from "./app-reducer";
+import {chatActionType, chatReducer} from "./chat-reducer";
 
 declare const window: any;
 
@@ -17,10 +18,15 @@ export const rootReducer = combineReducers({
     usersPage: usersReducer,
     auth: authReducer,
     form: formReducer,
-    app: appReducer
+    app: appReducer,
+    chat: chatReducer
 })
 
-export type AllActionType  = ProfileActionType | DialogsActionType | UsersActionsType | authActionType
+export type AllActionType = ProfileActionType
+    | DialogsActionType
+    | UsersActionsType
+    | authActionType
+    | chatActionType
 
 export type AppStateType = ReturnType<typeof rootReducer>
 export type AppDispatch = ThunkDispatch<AppStateType, unknown, AllActionType>
