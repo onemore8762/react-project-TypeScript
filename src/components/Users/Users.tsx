@@ -12,8 +12,8 @@ import {
 import {FilterType, follow, requestUsers, unFollow} from "../../redux/users-reducer";
 import {Form, Formik} from "formik";
 import {AppStateType} from "../../redux/redux-store";
-import {Button, Input, Select} from "antd";
-import {Preloader} from "../common/Preloader/Preloader";
+import {Button, Empty, Input, Select} from "antd";
+import {PreloaderCustom} from "../common/Preloader/PreloaderCustom";
 
 const getFilter = (state: AppStateType) => state.usersPage.filter
 
@@ -30,7 +30,6 @@ export const Users: React.FC = () => {
     useEffect(() => {
         dispatch(requestUsers(currentPage, pageSize, filter))
     }, [])
-
 
     const onPageChanged = (page: number, newPageSize: number) => {
         if (page !== currentPage || pageSize !== newPageSize) {
@@ -83,11 +82,12 @@ export const Users: React.FC = () => {
                     </Form>
                 )}
             </Formik>
-            {isFetching && <Preloader/>}
-            {!isFetching && <User users={users}
+            {isFetching && <PreloaderCustom/>}
+            {!isFetching && !!users.length && <User users={users}
                                   follow={followCallBack}
                                   unFollow={unFollowCallBack}
                                   followingInProgress={followingInProgress}/>}
+            {!users.length && <Empty style={{marginTop: 100}}/> }
             <Paginator currentPage={currentPage}
                        pageSize={pageSize}
                        onPageChanged={onPageChanged}

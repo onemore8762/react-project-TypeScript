@@ -31,7 +31,8 @@ const initialState = {
         }
     } as ProfileType,
     status: "",
-    myPhoto: ''
+    myPhoto: '',
+    isLoading: false
 }
 
 export type InitialStateProfileType = typeof initialState
@@ -57,20 +58,24 @@ export const profileReducer = (state = initialState, action: AllActionType): Ini
             return {...state, profile: {...state.profile, photos: action.photos}}
         case 'react-samurai-TS/profile/SET_MY_PHOTO':
             return {...state, myPhoto: action.photo}
+        case 'react-samurai-TS/profile/SET-LOADING':
+            return {...state, isLoading: action.isLoading}
         default:
             return state
     }
 }
 
-export type ProfileActionType = ReturnType<typeof AddPostAC>
-    | ReturnType<typeof SetUserProfileAC>
+export type ProfileActionType = ReturnType<typeof addPostAC>
+    | ReturnType<typeof setUserProfileAC>
     | ReturnType<typeof setStatus>
     | ReturnType<typeof deletePostAC>
     | ReturnType<typeof savePhotoSuccess>
     | ReturnType<typeof setMyPhoto>
+    | ReturnType<typeof setLoading>
 
-export const AddPostAC = (newPostText: string) => ({type: 'react-samurai-TS/profile/ADD_POST', newPostText} as const)
-export const SetUserProfileAC = (profile: ProfileType) => ({
+export const addPostAC = (newPostText: string) => ({type: 'react-samurai-TS/profile/ADD_POST', newPostText} as const)
+export const setLoading = (isLoading: boolean) => ({type: 'react-samurai-TS/profile/SET-LOADING', isLoading} as const)
+export const setUserProfileAC = (profile: ProfileType) => ({
     type: 'react-samurai-TS/profile/SET_USER_PROFILE',
     profile: profile
 } as const)
@@ -89,6 +94,7 @@ export const setMyPhoto = (photo: string) => ({
 } as const)
 
 export const getUserProfile = (userId: string): AppThunk => async (dispatch, getState) => {
+    dispatch(setLoading(true))
     const data = await profileAPI.getProfile(userId)
     const myPhoto = getState().profilePage.myPhoto
     if(!myPhoto) {
@@ -97,8 +103,8 @@ export const getUserProfile = (userId: string): AppThunk => async (dispatch, get
             dispatch(setMyPhoto(data.photos.large))
         }
     }
-
-    dispatch(SetUserProfileAC(data))
+    dispatch(setLoading(false))
+    dispatch(setUserProfileAC(data))
 }
 
 

@@ -4,26 +4,32 @@ import {Posts} from "./Posts/Posts";
 
 import TextArea from "antd/es/input/TextArea";
 import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
-import {AddPostAC} from "../../../redux/profile-reducer";
+import {addPostAC} from "../../../redux/profile-reducer";
 import {Form, Formik} from "formik";
 import {Button} from "antd";
+import {selectProfile} from "../selectors";
 
 
 type FormDataType = {
-    newPostText: string
+    newPostText: string,
 }
 
 
-export const MyPosts: React.FC = React.memo(() => {
+export const MyPosts: React.FC<{isOwner: boolean}> = React.memo(({isOwner}) => {
         const posts = useAppSelector(state => state.profilePage.posts)
         const dispatch = useAppDispatch()
+    const profile = useAppSelector(selectProfile)
+
+
         const onSubmit = (FormData: FormDataType) => {
-            dispatch(AddPostAC(FormData.newPostText))
+            dispatch(addPostAC(FormData.newPostText))
         }
+
+
         return (
             <div className={s.postsBlock}>
-                <h2>MyPosts</h2>
-                <Formik
+                <h2>{isOwner ? 'MyPosts': `${profile.fullName} posts`}</h2>
+                { isOwner &&  <Formik
                     initialValues={{newPostText: ''}}
                     onSubmit={(values,formikHelpers) => {
                         onSubmit(values)
@@ -44,6 +50,8 @@ export const MyPosts: React.FC = React.memo(() => {
                         </Form>
                     )}
                 </Formik>
+
+                }
                 <div className={s.posts}>
                     {posts.map(el => {
                         return <Posts key={el.id} message={el.message} like={el.likesCount}/>

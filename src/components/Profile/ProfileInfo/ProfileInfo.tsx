@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useState} from 'react';
 import s from './ProfileInfo.module.css'
-import {Preloader} from "../../common/Preloader/Preloader";
+import {PreloaderCustom} from "../../common/Preloader/PreloaderCustom";
 import {ProfileStatusWithHooks} from "./ProfileStatusWithHooks";
 import {ProfileFormik} from "./ProfileDataForm";
 import {ProfileType} from "../../../api/profile-api";
@@ -21,7 +21,7 @@ export const ProfileInfo = (props: ProfileInfoType) => {
 
     const [editMode, setEditMode] = useState(false)
     if (!props.profile) {
-        return <Preloader/>
+        return <PreloaderCustom/>
     }
 
     const onchangePhoto = (e: ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +41,7 @@ export const ProfileInfo = (props: ProfileInfoType) => {
 
     return (
         <div style={{position:'relative'}}>
-            <img src={background} style={{ width: '100%', height: 225, borderRadius: 10}}/>
+            <img src={background} style={{ width: '100%', height: 225, borderRadius: 10}} alt={'background'}/>
             <div style={{backgroundColor: '#00101f', width: '100%', height: 125, marginTop: -5, borderBottomLeftRadius: 10,borderBottomRightRadius: 10, position: 'relative'}}>
                 {props.isOwner && <Button onClick={()=> setEditMode(true)} style={{position: 'absolute', top: -15,right: 25}}>Edit Profile</Button>}
             </div>
@@ -54,7 +54,8 @@ export const ProfileInfo = (props: ProfileInfoType) => {
                     }
                   <div>
                       <h2 style={{verticalAlign: 'center'}}>{props.profile.fullName}</h2>
-                      <ProfileStatusWithHooks status={props.status} updateStatus={props.updateStatus}/>
+                      {props.isOwner && <ProfileStatusWithHooks status={props.status} updateStatus={props.updateStatus}/>}
+                      {!props.isOwner && props.status}
                   </div>
                 </div>
 

@@ -11,9 +11,8 @@ export const ProfileStatusWithHooks = (props: PropsType) => {
 
     const [editMode, setEditMode] = useState(false)
     const [status, setStatus] = useState(props.status)
-
     useEffect(() => {
-        setStatus(status)
+        setStatus(props.status)
     },[props.status])
 
     const activeEditMode = () => {

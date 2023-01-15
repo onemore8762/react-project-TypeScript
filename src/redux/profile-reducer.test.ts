@@ -1,5 +1,5 @@
 import {
-    AddPostAC,
+    addPostAC,
     deletePostAC,
     InitialStateProfileType,
     profileReducer,
@@ -17,13 +17,14 @@ beforeEach(() => {
         ] as Array<postType>,
         profile: {} as ProfileType,
         status: "",
-        myPhoto: ''
+        myPhoto: '',
+        isLoading: false
     }
 })
 
 test('new post should be add', () => {
 
-    let action = AddPostAC('test_add')
+    let action = addPostAC('test_add')
 
     let newState = profileReducer(initialState, action)
 

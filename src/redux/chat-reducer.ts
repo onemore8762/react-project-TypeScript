@@ -14,18 +14,26 @@ export const chatReducer = (state = initialState, action: AllActionType): initia
             return {...state, messages: [...state.messages, ...action.payload.messages]}
        case 'react-samurai-TS/chat/STATUS-CHANGED':
             return {...state, status: action.payload.status }
+        case 'react-samurai-TS/chat/CLEAR-MESSAGE':
+            return {...state, messages: []}
         default:
             return state
     }
 }
 
-export type chatActionType = ReturnType<typeof messagesReceived> |ReturnType<typeof statusChanged>
+export type chatActionType =
+    | ReturnType<typeof messagesReceived>
+    | ReturnType<typeof statusChanged>
+    | ReturnType<typeof clearMessage>
 
 export const messagesReceived = (messages: ChatMessageType[]) => {
     return {type: 'react-samurai-TS/chat/SET-MESSAGES', payload: {messages}} as const
 }
 export const statusChanged = (status: StatusType) => {
     return {type: 'react-samurai-TS/chat/STATUS-CHANGED', payload: {status}} as const
+}
+export const clearMessage = () => {
+    return {type: 'react-samurai-TS/chat/CLEAR-MESSAGE'} as const
 }
 
 
@@ -60,6 +68,7 @@ export const stopMessagesListening = (): AppThunk => async (dispatch) => {
     chatApi.unsubscribe('messages-received',newMessageHandlerCreator(dispatch))
     chatApi.unsubscribe('status-changed',statusChangedHandlerCreator(dispatch))
     chatApi.stop()
+    dispatch(clearMessage())
 }
 
 export const sendMessage = (message: string): AppThunk => async (dispatch) => {

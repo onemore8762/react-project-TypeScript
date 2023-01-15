@@ -1,7 +1,7 @@
 import React, {lazy, useEffect} from 'react';
 import './App.css';
-import {Link, Route, Routes, useLocation} from "react-router-dom";
-import {Preloader} from "./components/common/Preloader/Preloader";
+import {Link, Navigate, Route, Routes, useLocation} from "react-router-dom";
+import {PreloaderCustom} from "./components/common/Preloader/PreloaderCustom";
 import {initializedApp} from "./redux/app-reducer";
 import {AppHeader} from "./components/Header/Header";
 import {
@@ -18,9 +18,9 @@ import {Layout, Menu} from 'antd';
 import {News} from "./components/News/News";
 import {Music} from "./components/Music/Music";
 import {Settings} from "./components/Settings/Settings";
-import {UsersPage} from "./components/Users/UsersPage";
 import {Login} from "./Login/Login";
 import logo from "./assets/images/logo4.png";
+import {Users} from "./components/Users/Users";
 
 
 const {Content, Sider} = Layout;
@@ -40,11 +40,15 @@ export const App = () => {
     useEffect(() => {
         dispatch(initializedApp())
     }, [])
+
     if(path.pathname.slice(0,8) === '/profile'){
         location = path.pathname.slice(0,8)
     }else{
         location = path.pathname
     }
+
+
+
     if (!initialized) return <div style={{display: "flex", justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
         <LoadingOutlined style={{ fontSize: 120 }} spin />
     </div>
@@ -67,7 +71,7 @@ export const App = () => {
                         borderRadius: 10
                     }}
                 >
-                    <Menu theme="dark" mode="inline" defaultSelectedKeys={[`${location}`]}>
+                    <Menu theme="dark" mode="inline" selectedKeys={[location]}>
                         <Menu.Item key={'/profile'} icon={<UserOutlined/>}> <Link to='/profile'>Profile</Link></Menu.Item>
                         <Menu.Item key={'/users'} icon={<TeamOutlined/>}> <Link to='/users'>Users</Link></Menu.Item>
                         <Menu.Item key={'/dialogs'} icon={<MessageOutlined/>}> <Link to='/dialogs'>Messages</Link></Menu.Item>
@@ -79,16 +83,17 @@ export const App = () => {
                 </Sider>
                 <Layout style={{position:'relative',backgroundColor: '#001529', margin: 50, marginTop: 100, color: '#ffffff', borderRadius: 15, minHeight: "85vh"}}>
                     <Content >
-                            <React.Suspense fallback={<Preloader/>}>
+                            <React.Suspense fallback={<PreloaderCustom/>}>
                                 <Routes>
                                     <Route path='/profile/:userId?' element={<ProfileContainer/>}/>
                                     <Route path='/dialogs' element={<DialogsContainer/>}/>
                                     <Route path='/news' element={<News/>}/>
                                     <Route path='/music' element={<Music/>}/>
                                     <Route path='/settings' element={<Settings/>}/>
-                                    <Route path='/users' element={<UsersPage/>}/>
+                                    <Route path='/users' element={<Users/>}/>
                                     <Route path='/login' element={<Login/>}/>
                                     <Route path='/chat' element={<ChatPage/>}/>
+                                    <Route path='/*' element={<Navigate to={'/profile'}/>}/>
                                 </Routes>
                             </React.Suspense>
                     </Content>

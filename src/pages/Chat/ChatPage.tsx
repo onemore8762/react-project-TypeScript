@@ -60,7 +60,7 @@ const Messages: React.FC = () => {
 
     useEffect(() => {
         if(isAutoScroll){
-            messageAnchorRef.current?.scrollIntoView({behavior: 'smooth'})
+            messageAnchorRef.current?.scrollIntoView({block: 'end',behavior: 'smooth'})
         }
     }, [messages])
     return (
@@ -72,7 +72,6 @@ const Messages: React.FC = () => {
 };
 
 const Message: React.FC<{ message: ChatMessageType }> = React.memo(({message}) => {
-    console.log('message')
     return (
         <div>
             <img src={message.photo}/> <b> {message.userName}</b>
