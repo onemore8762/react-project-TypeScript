@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import {Form, Formik} from "formik";
-import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
 import {saveProfile} from "../../../redux/profile-reducer";
 import {Button, Descriptions, Input} from "antd";
+import {useAppSelector} from "../../../common/hooks/useAppSelector";
+import {useAppDispatch} from "../../../common/hooks/useAppDispatch";
 
 
 export const ProfileFormik = ({setEditMode}: any) => {

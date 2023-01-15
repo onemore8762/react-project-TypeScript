@@ -1,10 +1,10 @@
 import React from 'react';
 import {login} from "../redux/auth-reducer";
 import {Navigate} from "react-router-dom";
-import s from '../components/common/FormsControls/FormsControls.module.css'
-import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {Form, Formik} from "formik";
 import {Button, Input} from "antd";
+import {useAppSelector} from "../common/hooks/useAppSelector";
+import {useAppDispatch} from "../common/hooks/useAppDispatch";
 
 
 export const Login = () => {
@@ -15,8 +15,8 @@ export const Login = () => {
     return (
 
         <Formik
-            initialValues={{email: '', password: '', rememberMe:false, captcha: '', error: ''}}
-            onSubmit={ async (values,formikHelpers ) => {
+            initialValues={{email: '', password: '', rememberMe: false, captcha: '', error: ''}}
+            onSubmit={async (values, formikHelpers) => {
                 const res = await dispatch(login(values.email, values.password, values.rememberMe, values.captcha))
                 formikHelpers.setErrors({error: res})
             }}
@@ -46,7 +46,7 @@ export const Login = () => {
                                onChange={(e) => setFieldValue('checkbox', e.currentTarget.value)}
                                style={{width: 50}}/>
                     </div>
-                    {errors.error && <div className={s.formSummaryError}>{errors.error}</div>}
+                    {errors.error && <div>{errors.error}</div>}
 
                     {captchaUrl && <>
                         <img src={captchaUrl} alt={'captcha'}/>

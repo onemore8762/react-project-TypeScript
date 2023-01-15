@@ -1,0 +1,9 @@
+.container {
+    padding: 10px;
+    border: 2px solid #b4eaff;
+    width: 350px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: #001529;
+}

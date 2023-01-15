@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.paginator {
+    background-color: #ececec;
+    position:absolute;
+    color: #000000;
+    bottom:0;
+    padding:5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}

@@ -10,5 +10,4 @@ type MessageType = {
 export const Message = (props: MessageType) => {
     const {message} = props
     return <div className={s.message}>{message}</div>
-
 }

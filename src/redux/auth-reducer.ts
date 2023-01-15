@@ -1,5 +1,5 @@
 import {AllActionType, AppThunk} from "./redux-store";
-import {authApi} from "../api/auth-api";
+import {authApi} from "../common/api/auth-api";
 import {getUserProfile} from "./profile-reducer";
 
 
@@ -56,8 +56,7 @@ export const login = (email: string, password: string, rememberMe: boolean, capt
             dispatch(getCaptcha())
             return response.data.messages
         }
-        let message = response.data.messages.length > 0 ? response.data.messages[0] : 'Some error'
-        return message
+        return response.data.messages.length > 0 ? response.data.messages[0] : 'Some error'
     }
 }
 

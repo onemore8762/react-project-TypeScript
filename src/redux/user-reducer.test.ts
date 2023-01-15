@@ -7,7 +7,7 @@ import {
     unFollowSuccess,
     usersReducer
 } from "./users-reducer";
-import {usersAPI} from "../api/users-api";
+import {usersAPI} from "../common/api/users-api";
 
 jest.mock('../api/users-api')
 const userAPIMock = usersAPI as jest.Mocked<typeof usersAPI>;

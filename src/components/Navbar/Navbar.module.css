@@ -1,13 +1,16 @@
-.nav {
-    grid-area: n;
-    background-color: orange;
-    padding: 20px;
+.sidebar {
+    position: relative;
+    overflow: auto;
+    height: 500px;
+    top: 100px;
+    bottom: 0;
+    border-radius: 10px;
 }
 
-.item a {
+
+.switch {
     color: white;
-}
-
-.item a.active {
-    color: gold;
+    position: absolute;
+    bottom: 10px;
+    left: 50px;
 }

@@ -9,7 +9,6 @@ type DialogsItemsProps = {
 
 export const DialogItems = (props: DialogsItemsProps) => {
     const {name, id} = props
-
     const path = '/dialogs/' + id
     return (
         <div className={s.dialog + ' ' + s.active}>

@@ -1,6 +1,6 @@
 import {AllActionType, AppThunk} from "./redux-store";
 import {v1} from "uuid";
-import {PhotosType, postType, profileAPI, ProfileType} from "../api/profile-api";
+import {PhotosType, postType, profileAPI, ProfileType} from "../common/api/profile-api";
 
 
 const initialState = {

@@ -7,13 +7,13 @@ type PropsType = {
 }
 
 
-export const ProfileStatusWithHooks = (props: PropsType) => {
+export const ProfileStatusWithHooks: React.FC<PropsType> = ({status, updateStatus}) => {
 
     const [editMode, setEditMode] = useState(false)
-    const [status, setStatus] = useState(props.status)
+    const [stateStatus, setStatus] = useState(status)
     useEffect(() => {
-        setStatus(props.status)
-    },[props.status])
+        setStatus(status)
+    },[status])
 
     const activeEditMode = () => {
         setEditMode(true)
@@ -21,7 +21,7 @@ export const ProfileStatusWithHooks = (props: PropsType) => {
 
     const deActiveEditMode = () => {
         setEditMode(false)
-        props.updateStatus(status)
+        updateStatus(stateStatus)
     }
 
     const onStatusChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,13 +38,13 @@ export const ProfileStatusWithHooks = (props: PropsType) => {
         <>
             {!editMode &&
                 <div>
-                    <span onDoubleClick={activeEditMode}>{props.status || "Not status"}</span>
+                    <span onDoubleClick={activeEditMode}>{status || "Not status"}</span>
                 </div>
             }
             {editMode &&
                 <div>
                     <input onKeyDown={keyDown} onChange={onStatusChange} autoFocus={true} onBlur={deActiveEditMode}
-                           value={status}></input>
+                           value={stateStatus}></input>
                 </div>
             }
         </>

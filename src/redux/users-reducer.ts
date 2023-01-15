@@ -1,9 +1,9 @@
-import {usersAPI, UserType} from "../api/users-api";
+import {usersAPI, UserType} from "../common/api/users-api";
 import {AppThunk} from "./redux-store";
 
 const initialState = {
     users: [] as UserType[],
-    pageSize: 7,
+    pageSize: 10,
     totalUsersCount: 0,
     currentPage: 1,
     isFetching: false,

@@ -1,9 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Button} from "antd";
+import {Avatar, Button} from "antd";
 import TextArea from "antd/es/input/TextArea";
-import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {sendMessage, startMessagesListening, stopMessagesListening} from "../../redux/chat-reducer";
-
+import {UserOutlined} from "@ant-design/icons";
+import s from './ChatPage.module.css'
+import {useAppSelector} from "../../common/hooks/useAppSelector";
+import {useAppDispatch} from "../../common/hooks/useAppDispatch";
 
 type ChatMessageType = {
     userId: number
@@ -15,7 +17,7 @@ type ChatMessageType = {
 
 const ChatPage = () => {
     return (
-        <div>
+        <div className={s.container}>
             <Chat/>
         </div>
     );
@@ -31,7 +33,7 @@ const Chat = () => {
         return () => {
             dispatch(stopMessagesListening())
         }
-    }, [])
+    }, [dispatch])
 
 
     return (
@@ -62,7 +64,7 @@ const Messages: React.FC = () => {
         if(isAutoScroll){
             messageAnchorRef.current?.scrollIntoView({block: 'end',behavior: 'smooth'})
         }
-    }, [messages])
+    }, [messages, isAutoScroll])
     return (
         <div style={{height: 400, overflowY: 'auto'}} onScroll={scrollHandler}>
             {messages?.map((m, index) => <Message key={index} message={m}/>)}
@@ -73,13 +75,16 @@ const Messages: React.FC = () => {
 
 const Message: React.FC<{ message: ChatMessageType }> = React.memo(({message}) => {
     return (
-        <div>
-            <img src={message.photo}/> <b> {message.userName}</b>
-            <br/>
-            <div>{message.message}</div>
+        <>
             <hr/>
-
-        </div>
+            <div style={{display: 'flex', margin: '15px 5px'}}>
+                <div style={{ minWidth: 100}}>
+                    <Avatar size={60} src={message.photo} icon={<UserOutlined/>}/>
+                    <div> {message.userName}</div>
+                </div>
+                <div style={{ width: '210px'}}>{ message.message}</div>
+            </div>
+        </>
     );
 })
 const AddMessageForm: React.FC = () => {
@@ -97,7 +102,7 @@ const AddMessageForm: React.FC = () => {
     }
     return (
         <div>
-            <TextArea onChange={(e) => setText(e.currentTarget.value)} value={message}></TextArea>
+            <TextArea style={{width: 200, height: 25, resize: 'none'}} onChange={(e) => setText(e.currentTarget.value)} value={message}></TextArea>
             <Button onClick={onClick} disabled={status !== 'ready'}> Send message </Button>
         </div>
     );

@@ -1,19 +1,20 @@
 import React, {useEffect} from 'react';
 import {ProfileInfo} from "./ProfileInfo/ProfileInfo";
-import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {getStatus, getUserProfile, savePhoto, saveProfile, updateStatus} from "../../redux/profile-reducer";
-import {Navigate, useNavigate, useParams} from "react-router-dom";
-import {selectIsAuth, selectProfile, selectStatusProfile, selectUserIdAuth} from "./selectors";
+import {useNavigate, useParams} from "react-router-dom";
+
 import {MyPosts} from "./MyPosts/MyPosts";
 import {Button} from "antd";
-import {PreloaderCustom} from "../common/Preloader/PreloaderCustom";
+import {PreloaderCustom} from "../../common/PreloaderCustom/PreloaderCustom";
+import {useAppSelector} from "../../common/hooks/useAppSelector";
+import {useAppDispatch} from "../../common/hooks/useAppDispatch";
+import {selectAuth, selectProfile} from "../../common/selectors/selectors";
 
 const Profile = () => {
-    const profile = useAppSelector(selectProfile)
-    const isLoading = useAppSelector(state => state.profilePage.isLoading)
-    const status = useAppSelector(selectStatusProfile)
-    const authorizedUserId = useAppSelector(selectUserIdAuth)
-    const isAuth = useAppSelector(selectIsAuth)
+    const profile = useAppSelector(selectProfile.Profile)
+    const isLoading = useAppSelector(selectProfile.IsLoading)
+    const status = useAppSelector(selectProfile.Status)
+    const authorizedUserId = useAppSelector(selectAuth.UserId)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const params = useParams()
@@ -39,7 +40,6 @@ const Profile = () => {
         }
     }, [userId])
 
-    if (!isAuth) return <Navigate to={'/login'}/>
     if (isLoading) return  <PreloaderCustom/>
     return (
         <div style={{position: 'relative'}}>

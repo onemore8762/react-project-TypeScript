@@ -3,11 +3,12 @@ import s from './MyPosts.module.css';
 import {Posts} from "./Posts/Posts";
 
 import TextArea from "antd/es/input/TextArea";
-import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
 import {addPostAC} from "../../../redux/profile-reducer";
 import {Form, Formik} from "formik";
 import {Button} from "antd";
-import {selectProfile} from "../selectors";
+import {useAppSelector} from "../../../common/hooks/useAppSelector";
+import {useAppDispatch} from "../../../common/hooks/useAppDispatch";
+import {selectProfile} from "../../../common/selectors/selectors";
 
 
 type FormDataType = {
@@ -15,10 +16,10 @@ type FormDataType = {
 }
 
 
-export const MyPosts: React.FC<{isOwner: boolean}> = React.memo(({isOwner}) => {
-        const posts = useAppSelector(state => state.profilePage.posts)
+export const MyPosts: React.FC<{ isOwner: boolean }> = React.memo(({isOwner}) => {
+        const posts = useAppSelector(selectProfile.Posts)
         const dispatch = useAppDispatch()
-    const profile = useAppSelector(selectProfile)
+        const profile = useAppSelector(selectProfile.Profile)
 
 
         const onSubmit = (FormData: FormDataType) => {
@@ -28,10 +29,10 @@ export const MyPosts: React.FC<{isOwner: boolean}> = React.memo(({isOwner}) => {
 
         return (
             <div className={s.postsBlock}>
-                <h2>{isOwner ? 'MyPosts': `${profile.fullName} posts`}</h2>
-                { isOwner &&  <Formik
+                <h2>{isOwner ? 'MyPosts' : `${profile.fullName} posts`}</h2>
+                {isOwner && <Formik
                     initialValues={{newPostText: ''}}
-                    onSubmit={(values,formikHelpers) => {
+                    onSubmit={(values, formikHelpers) => {
                         onSubmit(values)
                         formikHelpers.setFieldValue('newPostText', '')
                     }}
@@ -42,7 +43,7 @@ export const MyPosts: React.FC<{isOwner: boolean}> = React.memo(({isOwner}) => {
                                 value={getFieldProps('newPostText').value}
                                 onChange={(e) => setFieldValue('newPostText', e.target.value)}
                                 placeholder="Controlled autosize"
-                                autoSize={{ minRows: 3, maxRows: 5 }}
+                                autoSize={{minRows: 3, maxRows: 5}}
                             />
                             <Button onClick={submitForm} style={{marginTop: 15}}>
                                 Submit

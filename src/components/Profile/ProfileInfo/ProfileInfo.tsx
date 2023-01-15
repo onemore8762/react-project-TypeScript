@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useState} from 'react';
 import s from './ProfileInfo.module.css'
-import {PreloaderCustom} from "../../common/Preloader/PreloaderCustom";
+import {PreloaderCustom} from "../../../common/PreloaderCustom/PreloaderCustom";
 import {ProfileStatusWithHooks} from "./ProfileStatusWithHooks";
 import {ProfileFormik} from "./ProfileDataForm";
-import {ProfileType} from "../../../api/profile-api";
+import {ProfileType} from "../../../common/api/profile-api";
 import {Avatar, Button, Descriptions, Dropdown, MenuProps} from "antd";
 import {UserOutlined} from "@ant-design/icons";
 import background from './../../../assets/images/background.jpg'
@@ -73,17 +73,6 @@ export const ProfileInfo = (props: ProfileInfoType) => {
         </div>
     );
 };
-
-type ContactType = {
-    contactTitle: string
-    contactValue?: string
-}
-
-export const Contact: React.FC<ContactType> = ({contactTitle, contactValue}) => {
-    return <Descriptions.Item label={contactTitle} span={3} style={{color: '#ffffff'}}>
-        {contactTitle} : {contactValue}
-    </Descriptions.Item>
-}
 
 type ProfileDataType = {
     profile: ProfileType

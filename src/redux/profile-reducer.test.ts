@@ -4,7 +4,7 @@ import {
     InitialStateProfileType,
     profileReducer,
 } from "./profile-reducer";
-import {postType, ProfileType} from "../api/profile-api";
+import {postType, ProfileType} from "../common/api/profile-api";
 
 let initialState: InitialStateProfileType;
 
